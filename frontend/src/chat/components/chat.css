@@ -1,0 +1,17 @@
+.list-group-item.active {
+        z-index: 2;
+        color: #fff;
+        background-color: #287094;
+        border-color: #287094;
+}
+
+
+.bg-primary {
+        background-color: #287094!important;
+        font-size: 18px;
+}
+
+
+.msgofother {
+        font-size: 18px;
+}

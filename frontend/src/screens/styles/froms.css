@@ -1,0 +1,79 @@
+ 
+body{
+    /* overflow-x : hidden  */
+}
+
+
+.backtotop{
+  width: 10.5em;
+  height: 10em;
+  box-shadow: rgba(60, 64,67, 0.3) 0 1px 2px 0   ;
+  background-color: white;
+  position: absolute;
+  top: -5.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  overflow: hidden;
+  
+}
+
+
+
+input:focus { 
+        outline:none;
+        border-color:#9ecaed;
+        box-shadow:0 0 25px #9ecaed;
+}
+
+
+
+[placeholder]:focus::-webkit-input-placeholder {
+        transition: text-indent 0.4s 0.4s ease; 
+        text-indent: -150%;
+        opacity: 1;
+}
+
+.form {
+        /* min-width: 400px; */
+        position: relative;
+        background-color:white;
+        border-radius: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        margin-top: 10px;
+        box-shadow: rgba(60, 64,67, 0.3) 0 1px 2px 0 , rgba(60, 64,67, 0.15) 0 1px 3px 1px  ;
+}
+
+.upgap{
+        margin-top: 100px;
+}
+
+
+.uibutton:hover {
+        cursor: pointer;
+        
+}
+
+.lineleft{
+        -webkit-border-start: 1px #d8d8d8 solid;
+        
+}
+.lineright{
+        -webkit-border-end: 1px #d8d8d8 solid;
+        
+}
+
+
+.card-header {
+        padding: 0;
+        background-color: #dededb;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+        color: white;
+
+}
+
+.card-header p {
+        margin: -10;
+        font-size: 18px;
+}
