@@ -10,6 +10,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import ExploreIcon from '@material-ui/icons/Explore';
+import SearchNav from './SearchNav';
+
 
 class Navbar extends Component {
 
@@ -34,8 +36,12 @@ class Navbar extends Component {
       
 
 
+        <SearchNav/>
+
        { this.props.userInfo? (
         <div className="header__right">
+
+
 
 
         
@@ -107,6 +113,7 @@ class Navbar extends Component {
         <Link to={'/joinAsProWorker'} style={{color:'white',marginRight:'15px'}}>Join as Professional</Link>
         <Link to={'/joinAsTeacher'} style={{color:'white',marginRight:'15px'}}>Join as Teacher</Link>
         <Link to={'/register'} style={{color:'white',marginRight:'15px'}}>Create Gigs</Link>
+        <Link to={'/postajob'} style={{color:'white',marginRight:'15px'}}>Post a Job</Link>
         <Link to={'/signin'} ><Button variant="outlined" size='large' color="primary"><h4>Log In</h4></Button></Link>
         <Link to={'/register'} ><Button variant="contained" size='large' color="primary"><h4>Register</h4></Button></Link>
 

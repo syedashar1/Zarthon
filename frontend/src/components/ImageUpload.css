@@ -329,8 +329,8 @@ img {
   width: 100%;
 } */
 img.medium {
-  max-width: 29rem;
   width: 100%;
+  text-align: center;
 }
 /* img.large {
   width: 100%;
@@ -340,9 +340,11 @@ img.medium {
 /* Card */
 .card {
   /* border: 0.1rem #c0c0c0 solid; */
-  background-color: #fbfbfb;
+  /* background-color: #fbfbfb; */
+  background-color: white;
   margin: 1rem;
   cursor: pointer;
+  width: 240px;
 
   
 }
@@ -353,8 +355,8 @@ img.medium {
   margin-bottom: 0.5rem;
 }
 .card-img{
-  width: 250px;
-  height: 300px;
+  width: 100%;
+  height: 200px;
   overflow: hidden;
   align-items: center;
   text-align: center;
@@ -899,4 +901,24 @@ button:hover{
 
 .Mui-selected{
   color: #0095f6 !important;
+}
+
+.MuiTypography-body1{
+  font-size: 15px !important
+}
+.MuiIconButton-colorSecondary {
+  color: #4375ff !important;
+  font-size: larger; 
+}
+.MuiAccordion-root.Mui-expanded {
+  margin: 5px 0 !important;
+}
+.pagination a{
+  font-size: 2.5rem !important;
+}
+
+
+.this-active {
+  background: #abcbff !important;
+  border-radius: 5px !important;
 }

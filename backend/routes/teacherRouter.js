@@ -61,13 +61,15 @@ teacherRouter.put('/editpro' , isAuth ,expressAsyncHandler( async (req , res) =>
     console.log(req.body);
     const pro = await Teacher.findOne({by : req.user._id })
     if(pro){
-    pro.portfolio = req.body.portfolio || pro.portfolio  ;
-    pro.title = req.body.title || pro.title  ;
-    pro.budget = req.body.budget || pro.budget  ;
-    pro.avaliable = req.body.avaliable || pro.avaliable  ;
-    pro.description = req.body.description || pro.description  ;
-    pro.tags = req.body.tags || pro.tags  ;
-    pro.languages = req.body.languages || pro.languages  ;
+      pro.portfolio = req.body.portfolio || pro.portfolio  ;
+      pro.negotiate = req.body.negotiate  ;
+      pro.title = req.body.title || pro.title  ;
+      pro.budget = req.body.budget || pro.budget  ;
+      pro.avaliable = req.body.avaliable || pro.avaliable  ;
+      pro.description = req.body.description || pro.description  ;
+      pro.tags = req.body.tags || pro.tags  ;
+      pro.languages = req.body.languages || pro.languages  ;
+      pro.videos = req.body.videos || pro.videos  ;
 
     await pro.save()
     res.send(pro)

@@ -1,0 +1,38 @@
+.pro-card{
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    background-color: white;
+    cursor: pointer;
+}
+.pro-card:hover{
+    background-color: aliceblue;
+}
+
+.pro-card .progress-barsub {
+    background-color: rgb(235, 235, 235);
+
+}
+.pro-card .progress-bar{
+    margin-top: -10px;
+}
+
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  transform: scale(2);
+  padding: 10px;
+  font-size: 210% !important;
+  display: inline;
+}
+
+/* Might want to wrap a span around your checkbox text */
+.checkboxtext
+{
+  /* Checkbox text */
+  
+}

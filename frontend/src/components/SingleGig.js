@@ -4,6 +4,7 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import NamePic from './NamePic';
 import { useDispatch, useSelector } from 'react-redux';
+import Fade from 'react-reveal/Fade';
 
 
 export default function SingleGig({gig}) {
@@ -19,9 +20,9 @@ export default function SingleGig({gig}) {
 
 
     return (
-        <div>
-        {User && gig && User._id && 
-        
+        <Fade>
+        {gig && 
+    
         <div className='card' onClick={()=>history.push(`/gigs/${gig._id}`)}>
         <div className='card-img' >
         <img
@@ -31,11 +32,11 @@ export default function SingleGig({gig}) {
         />
         </div>
         <div className='card-body' >
-        <h1><Image src={User.profilePic} style={{width:'85px' , height:'85px' , borderRadius:'50%', cursor :'pointer',margin : '0px 25px ' }} alt='a pic' 
-        onClick={ () => {history.push(`/user/${User._id}`)} }/><b>{User.name}</b></h1>
-        <h1>{gig.title}</h1>
-        <p>{gig.description}</p>
-        <p>Starting at {gig.beginner.price }</p>
+        {User && <Fade><Image src={User.profilePic} style={{width:'45px' , height:'45px' , borderRadius:'50%', cursor :'pointer',margin : '0px 5px ' }} alt='a pic' 
+        onClick={ () => {history.push(`/user/${User._id}`)} }/>{User.name}</Fade>}
+        <h1 style={{whiteSpace:'nowrap' ,height:'45px',overflow:'hidden',textOverflow:'ellipsis',marginTop:'10px'}}>{gig.title}</h1>
+        <hr></hr>
+        <p style={{textAlign:'right'}}>Starting at <b>${gig.beginner.price }</b> </p>
         </div>
         </div>
             
@@ -44,6 +45,6 @@ export default function SingleGig({gig}) {
 
 
             
-        </div>
+        </Fade>
     )
 }

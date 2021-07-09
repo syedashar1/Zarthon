@@ -43,7 +43,7 @@ render() {
                 <form className="form text-center" style={{maxWidth:'460px' , marginTop:100}} onSubmit={this.submitHandler}>
                 
                 <div >
-                <p className='logo'>Coolgram</p>
+                <p className='logo'>Zarthon</p>
                 </div>
                 <div>
                 <input type="text" id="email" placeholder="Enter userName" required onChange={(e) => this.setState({ email : e.target.value})}></input>

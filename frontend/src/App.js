@@ -30,6 +30,8 @@ import ExploreGigs from './screens/ExploreGigs';
 import GigScreen from './screens/GigScreen';
 import Dashboard from './chat/components/Dashboard';
 import DashboardScreen from './screens/DashboardScreen';
+import ProVideo from './screens/ProVideo';
+
 
 
 
@@ -55,7 +57,7 @@ class App extends React.Component {
                 <Route path="/profile" component={UserProfile} exact></Route>
                 <Route path="/notifications" component={NotitificationScreen} exact></Route>
                 <Route path="/explore" component={ExploreScreen} exact></Route>
-                <Route path="/" component={NewsFeedScreen} exact></Route>
+                <Route path="/" component={Home} exact></Route>
                 <Route path="/user/:id" component={UserProfile} exact></Route>
                 <Route path="/chat" component={ChatApp}></Route>
                 <Route path="/reset/:token" component={ResetScreen}></Route>
@@ -65,6 +67,7 @@ class App extends React.Component {
                 <Route path="/proworker/:id" exact component={ProWorkScreen}></Route>
                 <Route path="/proworker-update/:id" exact component={ProWorkUpdate}></Route>
                 <Route path="/explore-pro" exact component={ExplorePro}></Route>
+                <Route path="/joinAsProWorker-videos" exact component={ProVideo}></Route>
 
 
                 <Route path="/joinAsTeacher" exact component={joinAsTeacherScreen}></Route>
@@ -75,7 +78,9 @@ class App extends React.Component {
 
                 <Route path="/edit-gig/:id" exact component={GigUpdateScreen}></Route>
                 <Route path="/explore-gigs" exact component={ExploreGigs}></Route>
-                <Route path="/gigs/:id" exact component={GigScreen}></Route>
+                <Route path="/gigs/:id" component={GigScreen}></Route>
+                <Route path='/explore-gig/title/:title/tags/:tags/min/:min/max/:max/delivery/:delivery/country/:country/language/:language/sort/:sort/pageNumber/:pageNumber' exact component={ExploreGigs}></Route>
+
 
                 <Route path="/admin-updates" exact component={adminUpdate}></Route>
                 <Route path="/updates" exact component={UpdatesScreen}></Route>

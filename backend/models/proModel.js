@@ -31,6 +31,12 @@ const proSchema = new mongoose.Schema(
         totalApplied : {type : Number , default : 0},
         appliedSuccess : {type : Number , default : 0},
 
+        videos : [{
+                title : {type : String },
+                video : {type : String},
+                description : {type : String},
+        }]
+
 
 } ,
 {

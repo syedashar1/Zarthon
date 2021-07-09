@@ -4,6 +4,13 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { projectFirestore, projectStorage, timestamp } from '../firebase/config';
 import useFirestore from '../hooks/useFirestore';
+import Slide from 'react-reveal/Slide';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import BackspaceIcon from '@material-ui/icons/Backspace';
+import { motion } from 'framer-motion';
+import { Col, Container, Row } from 'react-bootstrap';
+import CheckIcon from '@material-ui/icons/Check';
+
 
 export default function GigUpdateScreen(props) {
 
@@ -200,72 +207,93 @@ export default function GigUpdateScreen(props) {
 
     
     return (
-        <div><button onClick={()=>console.log(Pics)} >click</button>
+        <div>
+        <br/>
         <form onSubmit={updateHandler} >
-        
-        <h1>Gig Name</h1>
-        <input value={Title} onChange={(e)=>setTitle(e.target.value)} />
 
-        <h1>Gig Description</h1>
-        
-        <textarea value={Description} onChange={(e)=>setDescription(e.target.value)} rows='8' cols='40' />
+        <Slide right>
+        <div className='form text-center' >
+        <p className='logo'>Zarthon Gig</p>
+        <input style={{fontSize:'25px'}} value={Title} onChange={(e)=>setTitle(e.target.value)} placeholder='Gig Title' />
+        <br/> <br/>
+        <textarea value={Description} onChange={(e)=>setDescription(e.target.value)} rows='7' cols='45' placeholder='Describe your Gig in detail' />
 
-        <h3>Is it negotiable ?</h3>
-        <div className='custom-control custom-switch'>
-        <input type='checkbox' className='custom-control-input' id='x'
-        onChange={()=>handleToggle()}readOnly
-        />
-        <label className='custom-control-label' htmlFor='x'>Is it negotiable ?</label>
+        <div className='row center' >
+        <div className='custom-control custom-switch text-center'>
+        
+        <input  type='checkbox' className='custom-control-input' id='x' onChange={()=>handleToggle()}readOnly/>
+        <label className='custom-control-label' htmlFor='x' >Is it negotiable ?</label>
+        
+        </div>
         </div>
 
         <h1>Select your skills</h1>
-        <input onChange={e=>setATag(e.target.value)} value={aTag} />
-        <h2 onClick={()=>{setTags([...Tags , aTag]);setATag('')}} >Add</h2>
-        {Tags && Tags.map(x=>
-                <span><h3>{x}</h3><span onClick={()=>{setTags(Tags.filter(e=>e !== x ))}} >remove</span></span>
-        )}
+                {Tags && Tags.map(x=>
+                        <span style={{ display: 'inline-block' , background:'#a1c5ff',color:'white', borderRadius:'20px' ,padding:'5px',margin:'5px',cursor:'pointer' }}>
+                        {x}{' '}<BackspaceIcon onClick={()=>{setTags(Tags.filter(e=>e !== x ))}} /></span>
+                )}<br/><br/>
+                <input onChange={e=>setATag(e.target.value)} value={aTag} />
+                <span onClick={()=>{setTags([...Tags , aTag]);setATag('')}} ><AddCircleIcon style={{fontSize:'30px',color:'grey'}}/></span>
+        </div>
+        </Slide>
+        
+        <br/>
 
+        <Slide right>
+        <div className='form text-center' style={{maxWidth:'1000px'}}>
         <p>{Pics.map(x=><span style={{textAlign:'center'}}>
-                <img src={x} style={{width:'400px',height:'300px'}} />
+                <img src={x} style={{width:'300px',height:'200px'}} />
                 <button type='disabled' onClick={()=>setPics(Pics.filter(e=>e !== x))}>X</button>
                 </span>)}</p>
-
+        <hr/>                
         <h1>Upload Pics</h1>
         <input type='file' onChange={handleChange} ></input>
-        {Perc}%
-
-
-
-        <div className='basic' >
-        <h1>Give a sub title for Basic</h1>
-        <input value={Bname} onChange={(e)=>setBname(e.target.value)} />
-        <h1>describes</h1>
-        <textarea value={Bdesc} onChange={(e)=>setBdesc(e.target.value)} rows='3' cols='40' />
-
+        <div className='progress-barsub'>
+        <motion.div className="progress-bar" initial={{ width: 0 }} animate={{ width: Perc + '%' }}/>
+        </div>
+        </div>
+        </Slide>
+        
+        <br/>
+        <div className='row center top'>
+        
+        <Slide left>
+        <div className='basic form text-center' >
+        <h1>Basic Offer</h1>
+        <input value={Bname} onChange={(e)=>setBname(e.target.value)} placeholder='title' />
+        <br/><br/>
+        <textarea value={Bdesc} onChange={(e)=>setBdesc(e.target.value)} rows='3' cols='30' placeholder='Description'/>
+        <br/>
         <h1>set Budget</h1>
         <input value={Bprice} type='number' onChange={(e)=>setBprice(e.target.value)} />
-        <h1>set delivery time</h1>
-        <input value={Bdelivery}  type='number' onChange={(e)=>setBdelivery(e.target.value)} />
-        <h1>set revisions</h1>
-        <input value={Brevisions}  type='number' onChange={(e)=>setBrevisions(e.target.value)} />
+        
+        <h1>delivery</h1>
+        <input value={Bdelivery}  type='number' onChange={(e)=>setBdelivery(e.target.value)} style={{width:'70px'}} />
+        
+        <h1>revisions</h1>
+        <input value={Brevisions}  type='number' onChange={(e)=>setBrevisions(e.target.value)} style={{width:'70px'}}/>
+        
         
         <h1>Add offers</h1>
         <input onChange={e=>setBoffer(e.target.value)} value={Boffer} />
-        <h2 onClick={()=>{setBOFFERS([...BOFFERS , Boffer]);setBoffer('')}} >Add</h2>
+        <span onClick={()=>{setBOFFERS([...BOFFERS , Boffer]);setBoffer('')}} ><AddCircleIcon style={{fontSize:'20px',color:'grey'}}/></span>
+        <hr/>
+        <p style={{textAlign:'left', margin:'15px' }}>
         {BOFFERS && BOFFERS.map(x=>
-                <span><h3>{x}</h3><span onClick={()=>{setBOFFERS(BOFFERS.filter(e=>e !== x ))}} >remove</span></span>
+                <span><h3><CheckIcon/>{x}</h3><span onClick={()=>{setBOFFERS(BOFFERS.filter(e=>e !== x ))}} ></span></span>
         )}
+        </p>
         </div>
+        </Slide>
 
 
-
-
-        <div className='standard' >
-        <h1>Give a sub title for Standard</h1>
-        <input value={Sname} onChange={(e)=>setSname(e.target.value)} />
-        <h1>describes</h1>
-        <textarea value={Sdesc} onChange={(e)=>setSdesc(e.target.value)} rows='3' cols='40' />
-
+        <Slide bottom>
+        <div className='standard form text-center' >
+        <h1>Standard Offer</h1>
+        <input value={Sname} onChange={(e)=>setSname(e.target.value)} placeholder='title' />
+        <br/><br/>
+        <textarea value={Sdesc} onChange={(e)=>setSdesc(e.target.value)} rows='3' cols='30' placeholder='Description'/>
+        <br/>
         <h1>set Budget</h1>
         <input value={Sprice} type='number' onChange={(e)=>setSprice(e.target.value)} />
         <h1>set delivery time</h1>
@@ -275,19 +303,25 @@ export default function GigUpdateScreen(props) {
         
         <h1>Add offers</h1>
         <input onChange={e=>setSoffer(e.target.value)} value={Soffer} />
-        <h2 onClick={()=>{setSOFFERS([...SOFFERS , Soffer]);setSoffer('')}} >Add</h2>
+        <span onClick={()=>{setSOFFERS([...SOFFERS , Soffer]);setSoffer('')}} ><AddCircleIcon style={{fontSize:'20px',color:'grey'}}/></span>
+        <hr/>
+        <p  style={{textAlign:'left', margin:'15px' }}>
         {SOFFERS && SOFFERS.map(x=>
-                <span><h3>{x}</h3><span onClick={()=>{setSOFFERS(SOFFERS.filter(e=>e !== x ))}} >remove</span></span>
+                <span><h3><CheckIcon/>{x}</h3><span onClick={()=>{setSOFFERS(SOFFERS.filter(e=>e !== x ))}} >remove</span></span>
         )}
+        </p>
         </div>
+        </Slide>
 
 
-        <div className='premium' >
-        <h1>Give a sub title for Premium</h1>
-        <input value={Pname} onChange={(e)=>setPname(e.target.value)} />
-        <h1>describes</h1>
-        <textarea value={Pdesc} onChange={(e)=>setPdesc(e.target.value)} rows='3' cols='40' />
-
+        <Slide right>
+        <div className='premium  form text-center' >
+        <h1>Premium Offer</h1>
+        
+        <input value={Pname} onChange={(e)=>setPname(e.target.value)} placeholder='title' />
+        <br/><br/>
+        <textarea value={Pdesc} onChange={(e)=>setPdesc(e.target.value)} rows='3' cols='30' placeholder='Description'  />
+        <br/>
         <h1>set Budget</h1>
         <input value={Pprice} type='number' onChange={(e)=>setPprice(e.target.value)} />
         <h1>set delivery time</h1>
@@ -297,15 +331,26 @@ export default function GigUpdateScreen(props) {
         
         <h1>Add offers</h1>
         <input onChange={e=>setPoffer(e.target.value)} value={Poffer} />
-        <h2 onClick={()=>{setPOFFERS([...POFFERS , Poffer]);setPoffer('')}} >Add</h2>
+        <span onClick={()=>{setPOFFERS([...POFFERS , Poffer]);setPoffer('')}} ><AddCircleIcon style={{fontSize:'20px',color:'grey'}}/></span>
+        <hr/>
+        <p style={{textAlign:'left' , margin:'15px' }}>
         {POFFERS && POFFERS.map(x=>
-                <span><h3>{x}</h3><span onClick={()=>{setPOFFERS(POFFERS.filter(e=>e !== x ))}} >remove</span></span>
+                <span><h3><CheckIcon/>{x}</h3><span onClick={()=>{setPOFFERS(POFFERS.filter(e=>e !== x ))}} >remove</span></span>
         )}
+        </p>
         </div>
 
+        </Slide>
+        
 
-        <h1><button type='submit'>UPDATE</button></h1>
-
+        </div>
+        <br/>
+        <div className='row center'>
+                <label />
+                <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                border: '1px solid transparent' }} type="submit"> Update </button>
+         </div>
+         <br/><br/>
         </form>
         
             

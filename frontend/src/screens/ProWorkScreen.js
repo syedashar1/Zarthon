@@ -24,7 +24,7 @@ export default function ProWorkScreen(props) {
     return (
         <div>
         {User && pro && pro._id &&
-        <div className='pro-card' style={{border:'5px solid black'}}>
+        <div>
 
         <h1><Image src={User.profilePic} style={{width:'85px' , height:'85px' , borderRadius:'50%', cursor :'pointer',margin : '0px 25px ' }} alt='a pic' 
         onClick={ () => {history.push(`/user/${User._id}`)} }/><b>{User.name}</b></h1>

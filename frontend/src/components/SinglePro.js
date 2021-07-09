@@ -1,6 +1,6 @@
 import React, { useEffect , useState } from 'react';
 import axios from 'axios';
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Col, Container, Image, Row ,ProgressBar} from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import NamePic from './NamePic';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import Bounce from 'react-reveal/Bounce';
 import Jump from 'react-reveal/Jump';
+import LinesEllipsis from 'react-lines-ellipsis'
 
 export default function SinglePro({pro , type}) {
 
@@ -35,17 +36,45 @@ export default function SinglePro({pro , type}) {
         <div>
     
         {User && pro && pro._id &&
-        <div className='pro-card' style={{border:'5px solid black'}} onClick={()=>history.push(`/${type}/${pro._id}`)}>
-        {type == 'teacher' && "A teacher"  }
-        {type == 'proworker' && "A Professional"  }
-        <h1><Image src={User.profilePic} style={{width:'85px' , height:'85px' , borderRadius:'50%', cursor :'pointer',margin : '0px 25px ' }} alt='a pic' 
-        onClick={ () => {history.push(`/user/${User._id}`)} }/><b>{User.name}</b></h1>
-        <h1>{pro.title}</h1>        
-        <h1>{pro.description}</h1>        
-        <h1>{pro.budget}</h1>        
-        <h1>{pro.avaliableHours}</h1>  
-        <h1>{pro.tags.map(x=><span>{x}{' '}</span>)}</h1>  
+        <div className='pro-card' onClick={()=>history.push(`/${type}/${pro._id}`)}>
+        <Container>
+        <br/>
+        <Row>
+        <Col lg={1} md={2} ><Image src={User.profilePic} style={{width:'75px' , height:'75px' , borderRadius:'50%', cursor :'pointer',margin : '0px' }} alt='a pic' 
+        onClick={ () => {history.push(`/user/${User._id}`)} }/></Col>
+        <Col lg={1} md={2}>
+        <p style={{marginBottom:'-5px',color:'green',fontSize:'20px'}} >{User.name}</p>
+        <p style={{marginBottom:'0px',fontWeight:'bold'}}>{pro.title}</p>
+        <p style={{marginBottom:'-5px',fontSize:'12px'}}><i>{'Pakistan'}</i></p>
+        </Col>
+        <Col lg={9} md={8} ></Col>
 
+        </Row>
+
+        <br/>
+        <Row style={{textAlign:'center',margin:'-10px 0px'}}>
+        <Col sm={3}><b>${pro.budget}</b>/hr {pro.negotiate ? 'negotiable' : 'fixed'} </Col>
+        <Col sm={3}><b>${pro.earned || 0}</b>{' earned'}</Col>
+        <Col sm={3}>
+        
+        <p>{'Job Success '+ pro.appliedSuccess}%</p>
+        <div className='progress-barsub'>
+        <motion.div className="progress-bar" initial={{ width: 0 }} animate={{ width: 66 + '%' }}/>
+        </div>
+        
+        </Col>
+        <Col sm={3}>{'Specail Tags'}</Col>
+        </Row><br/>
+        
+        <LinesEllipsis text={pro.description} maxLine='3' ellipsis='...' trimRight basedOn='letters' />
+        <br/>
+        <h1>
+        <p style={{overflow:'hidden' , textOverflow:'ellipsis',height:'50px',marginTop:'-30px',marginBottom:'-5px'}}>
+        {pro.tags.map(x=><span style={{display:'inline-block' ,background:'#a1c5ff',color:'white', borderRadius:'20px' ,padding:'5px',margin:'10px' }}>
+        {x}</span>)}
+        </p>
+        </h1> 
+        </Container>
         </div>
         }
         

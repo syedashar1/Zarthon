@@ -252,7 +252,13 @@ export default function UserProfile(props) {
                 
                 </div>
 
-                <h1><button onClick={createGigHandler}>CREATE GIG</button></h1>
+                <h1>{props.match.params.id && props.match.params.id !== userInfo._id ?
+                <button onClick={()=>setopenModal(true)}>Contact</button> : 
+                <button onClick={createGigHandler}>CREATE GIG</button>
+                
+                } 
+                
+                 </h1>
                 <div className="row center">
                 {Gigs && Gigs.map(gig => <SingleGig gig={gig} />)}
                 </div>
@@ -307,7 +313,7 @@ export default function UserProfile(props) {
 
                         <form className="form upgap text-center" onSubmit={submitHandler} >
                         <textarea id="description" rows="5" cols="50" type="text" required="true"
-                        placeholder="Enter family description" onChange={(e) => setMessage(e.target.value) }
+                        placeholder={`Send a message to ${user.name}`} onChange={(e) => setMessage(e.target.value) }
                         ></textarea>
                         <button>send</button>
                         </form>

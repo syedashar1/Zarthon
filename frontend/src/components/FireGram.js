@@ -2,6 +2,7 @@ import React, {useState } from 'react'
 import ImageGrid from './ImageGrid';
 import Modal from './Modal';
 import './ImageUpload.css'
+import './new.css'
 
 
 function App() {

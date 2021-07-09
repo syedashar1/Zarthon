@@ -55,8 +55,83 @@ gigRouter.post( '/suggestion' ,expressAsyncHandler(async (req, res) => {
 
 
 gigRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
-  const gigs = await Gig.find({ })
-  res.send(gigs)
+  // const gigs = await Gig.find({ })
+  // res.send(gigs)
+
+  console.log(req.query);
+
+  const title = req.query.title || '';
+  const titleFilter = title ? { title: { $regex: title=== "all" ? '' : title , $options: 'i' } } : {};
+
+  var tagsFilter = {};
+  if(req.query.tags && req.query.tags != 'all' ){
+  const tags = req.query.tags.split(' ') || '';
+  var tagsFilter = tags ?  { tags: { $all : tags } }  : {}; 
+  }
+
+
+  const delivery = req.query.delivery && Number(req.query.delivery) !==  0 ? Number(req.query.delivery) : 0;
+  const deliveryFilter = delivery  ?  {'beginner.delivery' : { $lte: delivery  } } : {};
+
+  
+  const min = req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
+  const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
+  const minpriceFilter = min  ?  { 'beginner.price' : { $gte: min  } } : {};
+  const maxpriceFilter = max  ? {'premium.price' : { $lte: max  } } : {};
+
+  
+  const order = req.query.order || '';
+  const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
+
+  
+  const sortOrder = order === 'rating' ? { finalRating : 1 } : 
+                    order === 'mostjobs' ? { jobDone : -1 } : 
+                    order === 'new' ?  { _id: -1 } : {_id : 1}
+
+
+
+  const country = req.query.country || '';
+  const countryFilter = country ? { country: { $regex: country=== "all" ? '' : country , $options: 'i' } } : {};
+
+  const language = req.query.language || '';
+  const languageFilter = language ? { languages : { $in: language } } : {};
+  
+
+  const pageSize = 9 ;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const totalGigs = await Gig.count({
+
+        // ...titleFilter ,
+    // ...minpriceFilter ,
+    // ...maxpriceFilter ,
+    // ...tagsFilter ,
+    // ...countryFilter ,
+    // ...languageFilter ,
+    // ...deliveryFilter
+
+  })
+
+
+  const gigs = await Gig.find({ 
+    // ...titleFilter ,
+    // ...minpriceFilter ,
+    // ...maxpriceFilter ,
+    // ...tagsFilter ,
+    // ...countryFilter ,
+    // ...languageFilter ,
+    // ...deliveryFilter
+  }).sort(sortOrder)
+
+
+  // .skip(pageSize * (page - 1)).limit(pageSize);
+
+
+  res.send({gigs , totalGigs , page , pages: Math.ceil(totalGigs / pageSize) })
+
+
+
+
 
 })
 );

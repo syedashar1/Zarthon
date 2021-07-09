@@ -13,6 +13,7 @@ import HeadShake from 'react-reveal/HeadShake';
 import Suggestions from '../components/Suggestions';
 import { SocketProvider } from '../chat/contexts/SocketProvider';
 import { useHistory } from "react-router-dom";
+import BackspaceIcon from '@material-ui/icons/Backspace';
 
 
 
@@ -40,6 +41,12 @@ export default function UserProfile(props) {
 
         const [Message, setMessage] = useState('')
         const [openModal, setopenModal] = useState(false)
+
+        const [Selectt, setSelectt] = useState([
+                'Web Developer','App Developer' , 'MERN Stack' , 'Drop Shipper' , 'C++ Developer' , 'High Frequency Trading Software Developer' ,
+                'Designer' , 'Illustrator' , 'Grapic Designer' , 'Forex Trader' , 'SQL Developer' , 'WordPress' , 'Ecomerce Developer' , 
+                'Data Entry Specialists' , 'Video Editors' , 'Data Analyst' , 'Shopify Developer'
+                ])
 
 
         const [Tiltle, setTiltle] = useState('')
@@ -93,7 +100,7 @@ export default function UserProfile(props) {
         const submitHandler = (e) => {
 
                 e.preventDefault()
-                alert('something')
+                console.log(Negotiate);
                 axios.put(`/api/professionals/editpro` , {
                         by : userInfo._id ,
                         title : Tiltle ,
@@ -166,11 +173,18 @@ export default function UserProfile(props) {
                 </div>
 
                 <h1>Select your skills</h1>
-                <input onChange={e=>setATag(e.target.value)} value={aTag} />
-                <h2 onClick={()=>{setTags([...Tags , aTag]);setATag('')}} >Add</h2>
                 {Tags && Tags.map(x=>
-                        <span><h3>{x}</h3><span onClick={()=>{setTags(Tags.filter(e=>e !== x ))}} >remove</span></span>
-                )}
+                        <span style={{ display: 'inline-block' , background:'#a1c5ff',color:'white', borderRadius:'20px' ,padding:'5px',margin:'5px',cursor:'pointer' }}>
+                        {x}{' '}<BackspaceIcon onClick={()=>{setTags(Tags.filter(e=>e !== x ))}} /></span>
+                )}<br/><br/>
+                <input onChange={e=>setATag(e.target.value)} value={aTag} />
+                <span onClick={()=>{setTags([...Tags , aTag]);setATag('')}} >Add</span>
+                <h1>Or select from these </h1>
+                {Selectt.map(x=><span 
+                        onClick={()=>setTags([...Tags , x])}
+                        style={{ display: 'inline-block' , background:'#a1c5ff',color:'white', borderRadius:'20px' ,padding:'5px',margin:'5px',cursor:'pointer' }}>
+                {x}</span>)}
+                
 
                 <h1>How many languages can u speak?</h1>
                 <input onChange={e=>setL1(e.target.value)} value={L1} />

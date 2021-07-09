@@ -48,6 +48,13 @@ const gigsSchema = new mongoose.Schema(
                 pic :  {type : String } ,
         }],
 
+        languages : [String] ,
+
+        jobDone : {type : Number , default:0 },
+        totalRatings : {type : Number , default : 0} ,
+        finalRating : {type : Number , default:0 }
+
+
 } ,
 {
         timestamps: true,
