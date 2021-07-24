@@ -15,13 +15,13 @@ export default function SearchNav() {
 
 
         if(Type === "Search Gigs"){
-
+        history.push(`/explore-gig/title/${Title || 'all' }/tags/${ 'all' }/min/${ 0}/max/${ 0}/delivery/${ 0}/country/${'all'  }/language/${'all'  }/sort/${'rating'}/pageNumber/${ 1}`)
         }
         if(Type === "Search Professionals"){
-            
+          history.push(`/explore-pro/title/${Title || 'all' }/tags/${'all' }/min/${ 0}/max/${0}/successRatio/${0}/earned/${ 0}/country/${'all'  }/language/${'all'  }/sort/${ 'rating'}/pageNumber/${ 1}`)    
         }
         if(Type === "Search Teachers"){
-            
+          history.push(`/explore-teacher/title/${Title || 'all' }/tags/${'all' }/min/${ 0}/max/${0}/successRatio/${0}/earned/${ 0}/country/${'all'  }/language/${'all'  }/sort/${ 'rating'}/pageNumber/${ 1}`)    
         }
         // console.log(title);
         // history.push(`/explore-gig/title/${Title || 'all' }/tags/${ TAGS.length > 0 ? TAGS.toString().replaceAll(",","+") : 'all' }/min/${Min || 0}/max/${Max || 0}/delivery/${Delivery || 0}/country/${Country || 'all'  }/language/${Language || 'all'  }/sort/${Sort || 'rating'}/pageNumber/${PageNumber || 1}`)

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+SC&display=swap');
+
+
 .pro-card{
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
@@ -7,7 +10,9 @@
 .pro-card:hover{
     background-color: aliceblue;
 }
-
+.teach:hover{
+  background-color: #ebfcf0;
+}
 .pro-card .progress-barsub {
     background-color: rgb(235, 235, 235);
 
@@ -35,4 +40,51 @@ input[type=checkbox]
 {
   /* Checkbox text */
   
+}
+
+.remember{
+  padding : 0px 20px ;
+  color: grey;
+  font-size: smaller;
+}
+
+.fl{
+  font-size: large;
+  font-family:cursive;
+}
+
+
+.portfolio form{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -250px;
+  width: 500px;
+  height: 200px;
+  border: 6px dashed rgb(23, 95, 154);
+  
+
+}
+.portfolio form:hover{
+  background-color: aliceblue;
+
+}
+
+.portfolio form p{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 170px;
+  color: black;
+  font-family: Arial;
+}
+.portfolio form input{
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
 }

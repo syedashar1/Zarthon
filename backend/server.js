@@ -10,6 +10,8 @@ import postFeedRouter from './routes/postFeedRouter.js';
 import professionalRouter from './routes/professionalRouter.js';
 import teacherRouter from './routes/teacherRouter.js';
 import gigRouter from './routes/gigRouter.js';
+import jobRouter from './routes/jobRoutes.js';
+import orderRouter from './routes/orderRouter.js';
 
 
 
@@ -37,6 +39,8 @@ app.use('/api/newsfeed', postFeedRouter);
 app.use('/api/professionals', professionalRouter);
 app.use('/api/teachers', teacherRouter);
 app.use('/api/gigs', gigRouter);
+app.use('/api/jobs', jobRouter);
+app.use('/api/orders', orderRouter);
 
 
 

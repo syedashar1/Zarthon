@@ -27,16 +27,16 @@ export default function SingleGig({gig}) {
         <div className='card-img' >
         <img
         className="medium"
-        src={gig.gigPics[0]}
+        src={gig.gigPics && gig.gigPics[0]}
         alt={gig._id}
         />
         </div>
         <div className='card-body' >
-        {User && <Fade><Image src={User.profilePic} style={{width:'45px' , height:'45px' , borderRadius:'50%', cursor :'pointer',margin : '0px 5px ' }} alt='a pic' 
+        {User && <Fade><Image src={User.profilePic} style={{width:'45px' , height:'45px' , borderRadius:'50%', cursor :'pointer',margin : '0px 5px ' , display:"flex" }} alt='a pic' 
         onClick={ () => {history.push(`/user/${User._id}`)} }/>{User.name}</Fade>}
         <h1 style={{whiteSpace:'nowrap' ,height:'45px',overflow:'hidden',textOverflow:'ellipsis',marginTop:'10px'}}>{gig.title}</h1>
         <hr></hr>
-        <p style={{textAlign:'right'}}>Starting at <b>${gig.beginner.price }</b> </p>
+        <p style={{textAlign:'right'}}>Starting at <b>${gig.beginner && gig.beginner.price }</b> </p>
         </div>
         </div>
             

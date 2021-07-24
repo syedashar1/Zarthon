@@ -11,15 +11,23 @@ export default function UpdatesScreen() {
 
     return (
         <div>
-        <h1><b>UPDATES SCREEN</b></h1>
+        
+        <div>
+        <h1 ><b>UPDATES SCREEN</b></h1>
         {Updates && Updates.map(x=>
             <div>
-            <h1>{x.title}</h1>
+            <br/>
+            <div  className='form p-5'  >
+            <h1 style={{fontSize:'50px' , fontFamily:'Encode Sans SC'}}  >{x.title}</h1>
             <p>{x.desc}</p>
-            </div>)
+            </div>
+            </div>
+        )
+        
 
         }
-            
+        </div>
+            <br/><br/>
         </div>
     )
 }

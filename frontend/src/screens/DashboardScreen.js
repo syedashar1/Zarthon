@@ -38,7 +38,7 @@ export default function DashboardScreen(props) {
             
             dispatch( userDetails() ) 
 
-            axios.get(`/api/professionals/user` ,  { headers: { Authorization: `Bearer ${userInfo.token}`} }  )
+            axios.get(`/api/professionals/user/${userInfo._id}` ,  { headers: { Authorization: `Bearer ${userInfo.token}`} }  )
             .then(res => { if(res.data){ setPro(res.data) }})
 
             axios.get(`/api/teachers/user` ,  { headers: { Authorization: `Bearer ${userInfo.token}`} }  )
@@ -68,7 +68,7 @@ export default function DashboardScreen(props) {
     return (
         <div>
         <h1>Dashboard</h1>
-        {user && Gigs && <div>
+        {user && Gigs && Pro && <div>
             
         <h1 id='seller' ><Image src={user.profilePic} style={{width:'85px' , height:'85px' , borderRadius:'50%', cursor :'pointer',margin : '0px 25px ' }} alt='a pic' 
         onClick={ () => {history.push(`/user/${user._id}`)} }/><b>{user.name}</b></h1>
@@ -78,8 +78,8 @@ export default function DashboardScreen(props) {
 
         {user.proAccount && <div>
         
-        <h1>Total Applied Jobs as Pro {" : "}{0} </h1>
-        <h1>Total Successful Jobs {" : "}{0} </h1>
+        <h1>Total Applied Jobs as Pro {" : "}{Pro.totalApplied} </h1>
+        <h1>Total Successful Jobs {" : "}{Pro.appliedSuccess} </h1>
         <h1>Total Jobs Done {" : "}{0} </h1>
         <h1>Success Ratio {" : "}{0} </h1>
         <h1>Total Earned As Pro {" : "}{0} </h1>

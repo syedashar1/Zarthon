@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function ProWorkScreen(props) {
     const [User, setUser] = useState(null)
     const [pro, setPro] = useState(null)
     const history = useHistory()
     const dispatch = useDispatch()
+
+    const userInfo = useSelector((state) => state.userSignin.userInfo);
+
 
     useEffect(() => {
         axios.get(`/api/professionals/${props.match.params.id}`).then(res=>{
@@ -23,25 +27,73 @@ export default function ProWorkScreen(props) {
 
     return (
         <div>
-        {User && pro && pro._id &&
-        <div>
+        {User && pro && pro._id && <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)'}}>
 
-        <h1><Image src={User.profilePic} style={{width:'85px' , height:'85px' , borderRadius:'50%', cursor :'pointer',margin : '0px 25px ' }} alt='a pic' 
-        onClick={ () => {history.push(`/user/${User._id}`)} }/><b>{User.name}</b></h1>
-        <h1>{pro.title}</h1>        
-        <h1>{pro.description}</h1>        
-        <h1>{pro.budget}</h1>        
-        <h1>{pro.avaliableHours}</h1>  
-        <h1>{pro.tags.map(x=><span>{x}{' '}</span>)}</h1>  
-        <h1>{pro.languages.map(x=><span>{x}{' '}</span>)}</h1>   
-        <h1>{pro.portfolio && <button><a href={pro.portfolio} target="_blank">Download portfolio</a></button>}</h1>  
-        <h1>{pro.by === User._id && <button><Link to={`/proworker-update/${pro._id}`}>Update</Link></button>}</h1> 
-        <h1>{pro.by === User._id && <button><Link to={`/proworker-update/${pro._id}`}>Delete</Link></button>}</h1> 
+
+        <Row>
+        <Col lg={2} md={2} ><Image src={User.profilePic} style={{width:'175px' , height:'175px' , borderRadius:'50%', cursor :'pointer',margin : '10px' }} alt='a pic' 
+        onClick={ () => {history.push(`/user/${User._id}`)} }/></Col>
+        <Col lg={3} md={2}>
+        <p style={{marginBottom:'5px',color:'green',fontSize:'40px'}} >{User.name}</p>
+        <p style={{marginBottom:'5px',fontSize:'12px'}}><i>{'Pakistan'}</i></p>
+        </Col>
+
+        <Col lg={3} md={8} >
+        <p>{'Job Success '+ pro.appliedSuccess}%</p>
+        <div className='progress-barsub'>
+        <motion.div className="progress-bar" initial={{ width: 0 }} animate={{ width: 66 + '%' }}/>
+        </div>
+        </Col>
+
+        <Col lg={4} md={8} style={{textAlign:'right'}}>
+        {pro.by !== userInfo._id ? <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                        border: '1px solid transparent' }} >Contact</button> 
+        
+        : <button onClick={()=>history.push(`/proworker-update/${pro._id}`)} style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                        border: '1px solid transparent' }} >Update</button> }{' '}
+        
+        {pro.portfolio && <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                        border: '1px solid transparent' }} >
+                            <a style={{color:'white'}} href={pro.portfolio}  target="_blank">Portfolio</a></button>}
+        
+        </Col>
+
+        </Row>
+
+        <hr style={{height:'13px'}}/>
+
+
+
+
+        <div className='text-center'>
+
+        
+        <h1 style={{fontSize:'50px' , fontFamily:'Encode Sans SC'}}>{pro.title}</h1>        
+        <h1 style={{fontSize:'30px' , fontFamily:'Encode Sans SC'}} >${pro.budget}/hr {' ' + pro.negotiate ? '(negotiable)' :'(fixed)' } </h1>        
+        <h1>{pro.description}</h1>
+
+        <hr style={{height:'13px'}}/>
+
+        <h1 style={{fontSize:'30px' , fontFamily:'Encode Sans SC'}} > Skill Set </h1>        
+        {pro.tags.map(x=><span style={{display:'inline-block' ,background:'#a1c5ff',color:'white', borderRadius:'20px' ,padding:'5px',margin:'10px' }}>
+        {x}</span>)}
+
+
+        <h1>Avaliable Hours Per Week : {' '}{pro.avaliableHours}hrs</h1>  
+
+        <hr style={{height:'13px'}}/>
+
+        <h1>Prefered Languages {' '}{pro.languages.map(x=><span>{x}{' '}</span>)}</h1>   
+
+        <h1 style={{fontSize:'30px' , fontFamily:'Encode Sans SC'}} > Work History </h1>        
+        <hr style={{height:'13px'}}/>
+
 
         </div>
+        </Container>
+
         }
         
-            
         </div>
     )
 }

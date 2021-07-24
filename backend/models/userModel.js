@@ -99,16 +99,20 @@ const userSchema = new mongoose.Schema(
         newNotifications : {type : Number , default : 0} ,
 
         notification : [{
-                type : { type : String } ,
-                by : { type : String } ,
-                post : { type : String } ,
-                comment : { type : String } ,
+                type : {type : String} ,
+                byName : {type : String} ,
+                text : {type : String} ,
+                link : {type : String } ,
         }],
 
 
         userName:{type : String , unique:true ,required:true} ,
         proAccount :{type :Boolean , default : false},
         teachAccount :{type :Boolean , default : false},
+
+
+        active : {type : Boolean , default : false} ,
+        lastSeen  : { type : Date, default: Date.now } ,
 
 
 } ,

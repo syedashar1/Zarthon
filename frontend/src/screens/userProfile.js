@@ -15,7 +15,9 @@ import { SocketProvider } from '../chat/contexts/SocketProvider';
 import { useHistory } from "react-router-dom";
 import SinglePro from '../components/SinglePro';
 import SingleGig from '../components/SingleGig';
-
+import WorkIcon from '@material-ui/icons/Work';
+import SchoolIcon from '@material-ui/icons/School';
+ 
 
 
 export default function UserProfile(props) {
@@ -62,9 +64,7 @@ export default function UserProfile(props) {
 
         useEffect(() => {
 
-                if (!userInfo) {
-                        history.push('/signin')
-                }
+                if (!userInfo) { history.push('/signin'); return; }
                 
                 if(props.match.params.id){
                         dispatch(userDetails(props.match.params.id))
@@ -77,17 +77,22 @@ export default function UserProfile(props) {
                 }
 
 
-                axios.get(`/api/professionals/user` ,  { headers: { Authorization: `Bearer ${userInfo.token}`} }  )
+                
+                
+                axios.get(`/api/professionals/user/${props.match.params.id ? props.match.params.id : userInfo._id}`   )
                 .then(res => {
-                  if(res.data){ setPro(res.data) }})
+                        if(res.data){ setPro(res.data) }})
 
-                axios.get(`/api/teachers/user` ,  { headers: { Authorization: `Bearer ${userInfo.token}`} }  )
+                axios.get(`/api/teachers/user/${props.match.params.id ? props.match.params.id : userInfo._id}`  )
                 .then(res => {
                 if(res.data){ setTeach(res.data) }})
 
 
                 axios.get(`/api/gigs/user/${props.match.params.id ? props.match.params.id : userInfo._id}`)
                 .then(res => { setGigs(res.data)})
+                
+
+               
 
         }, [productId , userInfo])
 
@@ -109,13 +114,9 @@ export default function UserProfile(props) {
 
 
         const submitHandler = (e) => {
-
                 e.preventDefault()
-
-
                 axios.put(`/api/chat/singletext/${userInfo._id}`, {text : Message , recipients: [user._id] }  );
                 setopenModal(false)
-
         }
 
 
@@ -161,22 +162,23 @@ export default function UserProfile(props) {
                 <div>
 
                 {userInfo && userInfo._id && <ChatApp show={true} />}
-                {user && user._id === userInfo._id &&
+                {user && userInfo && user._id === userInfo._id &&
                 <p style={{textAlign:'right'}}>
                 <button 
                 onClick={handleEdit}
                 style={{fontSize:"20px",height:'50px'}} className='btn btn-lg btn-dark'>Edit Profile</button> 
                 </p>
                 }
-                {user && <Container style={{marginTop:'30px'}}>
+                {user && <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)'}}>
+                <div style={{height:'20px'}} />
                         
                         <Row  >
-                        <Col style={{marginBottom:'20px'}} xs={4} >
+                        <Col style={{marginBottom:'20px'}} sm={4} >
                         
                         <ProfilePic></ProfilePic>
 
                         </Col >
-                        <Col xs={4} >
+                        <Col sm={3} >
 
                         {EditState ? 
                         <input 
@@ -210,14 +212,11 @@ export default function UserProfile(props) {
 
                         </Col>
                         
-
-
-                        </Row>
                         
 
-                
-                <div className='text-center' >
-                {EditState ? 
+                        <Col sm={5}>
+                        <div className='text-center' >
+                        {EditState ? 
                         <div>
                         <textarea
                         value = { Bio}
@@ -245,20 +244,43 @@ export default function UserProfile(props) {
                         </div>
 
                         </div> :
+                        <div>
                         <h1 >{ Bio || user.bio}</h1>
+                        { userInfo._id !== user._id && !user.active && 
+                        <h1 style={{fontSize:'15px',color:'grey'}}> Last seen on {' '}{user.lastSeen.split('T')[0]}{' '}at{' '}{user.lastSeen.split('T')[1].split('.')[0]} </h1>  }
+                        </div>
 
 
                 }
                 
                 </div>
+                        </Col>
 
-                <h1>{props.match.params.id && props.match.params.id !== userInfo._id ?
-                <button onClick={()=>setopenModal(true)}>Contact</button> : 
-                <button onClick={createGigHandler}>CREATE GIG</button>
+
+                        </Row>
+                        
+
                 
-                } 
                 
-                 </h1>
+
+                
+
+                 <div style={{height:'20px'}} />
+                
+                <div>
+                {user.proAccount && Pro && Pro.by &&  <SinglePro type='proworker' pro ={Pro} /> }
+                {user.teachAccount && Teach && Teach.by &&  <SinglePro type='teacher' pro ={Teach} /> }
+                </div>
+                <div style={{height:'40px'}} />
+
+
+                <h1 className='text-center'>{props.match.params.id && props.match.params.id !== userInfo._id ?
+                <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                border: '1px solid transparent' }} onClick={()=>setopenModal(true)}>Contact</button> : 
+                <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                border: '1px solid transparent' }} onClick={createGigHandler}>CREATE GIG</button>
+                }</h1>
+
                 <div className="row center">
                 {Gigs && Gigs.map(gig => <SingleGig gig={gig} />)}
                 </div>
@@ -266,12 +288,7 @@ export default function UserProfile(props) {
                 
 
 
-                <div style={{height:'20px'}} />
-                
-                <div>
-                {user.proAccount && Pro && Pro.by &&  <SinglePro type='proworker' pro ={Pro} /> }
-                {user.teachAccount && Teach && Teach.by &&  <SinglePro type='teacher' pro ={Teach} /> }
-                </div>
+
 
 
                 </Container >
@@ -288,7 +305,7 @@ export default function UserProfile(props) {
                 { suggestedUsers && user && user._id !== userInfo._id && 
 
                 <div>
-                <Suggestions users = {suggestedUsers} />
+                {/* <Suggestions users = {suggestedUsers} /> */}
                 </div>
                 
                 } 
@@ -330,6 +347,7 @@ export default function UserProfile(props) {
 
 
                 
+<div style={{height:'100px'}} />
                 
                 
                         

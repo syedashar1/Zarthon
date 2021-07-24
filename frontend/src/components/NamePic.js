@@ -28,12 +28,12 @@ export default function NamePic({id , comment , bystate }) {
 
 
         return (
-                <div>
+                <div >
                         {bystate ? 
                         <Fade cascade>
                         {!loading && state !== {} && 
-                        <Media>
-                        <div className="mr-3" style={{width:'65px',height:'65px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
+                        <Media  >
+                        <div className="mr-3" style={{width:'85px',height:'85px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
                         <img src={state.profilePic} onClick={()=>history.push(`/user/${id}`)} style={{width:'100%'}} />
                         </div>
                         <Media.Body>
@@ -47,8 +47,8 @@ export default function NamePic({id , comment , bystate }) {
                         </Fade> : 
                         <div>
                         {!loading && state !== {} && 
-                        <Media>
-                        <div className="mr-3" style={{width:'65px',height:'65px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
+                        <Media  className=' pro-card'  >
+                        <div className="mr-3" style={{width:'85px',height:'85px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
                         <img src={state.profilePic} onClick={()=>history.push(`/user/${id}`)} style={{width:'100%'}} />
                         </div>
                         <Media.Body>

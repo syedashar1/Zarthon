@@ -49,7 +49,16 @@ const ImageGrid = ({ setSelectedImg }) => {
   return (
     <div className="text-center" style={{maxWidth:'300px',minWidth:'130px' }}  >
 
-{user._id === userInfo._id && <UploadFormProfilePic />}
+    {user._id === userInfo._id ? <UploadFormProfilePic /> : 
+    user && user.active ? 
+    <div className='imgUpload' style={{position:'absolute' , bottom : '-30px',right:'90px',zIndex:'1000'}} >
+    <label className='imgUploadLabel' style={{background:'lightgreen' , border:'0px'}} />
+    </div> : 
+    <div className='imgUpload' style={{position:'absolute' , bottom : '-30px',right:'90px',zIndex:'1000'}} >
+    <label className='imgUploadLabel' style={{background:'lightgrey' , border:'0px'}} />
+    </div>
+
+    }
 <motion.div className="img-wrap" 
           layout
           whileHover={{ opacity : 1 }}s

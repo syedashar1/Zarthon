@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
+import { Container } from 'react-bootstrap'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetNewNotification } from '../actions/likeCommenentActions'
 import { useSocket } from '../chat/contexts/SocketProvider'
 import NamePicNotification from '../components/NamePicNotification'
+import { useHistory } from "react-router-dom";
 
 export default function Notifications({SocketNotifications , setSocketNotifications}) {
 
 
         const dispatch = useDispatch()
         const socket = useSocket()
+        const history = useHistory()
 
         const user = useSelector(state => state.getDetails.user)
 
@@ -43,27 +46,27 @@ export default function Notifications({SocketNotifications , setSocketNotificati
 
 
         return (
-                <div>
-
-                {user && SocketNotifications && SocketNotifications.length !== 0 && SocketNotifications.map(y => <div>
-                <NamePicNotification type={y.type} by={y.by} id={user._id} post={y.post} comment={y.comment} />
+                <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)' , padding:'30px 10px' }}>
+                <h1 className='fl'style={{fontSize:'40px'}} > Notifications </h1>
+                {user && SocketNotifications && SocketNotifications.length !== 0 && SocketNotifications.map(x => 
+                <div className='pro-card px-5' onClick={()=>history.push(`${x.link}`)} >
+                <h1><b>{x.type}{' by '}{x.byName}</b> </h1>
+                <p>{x.text}</p> 
                 </div>
                 )}
 
 
-                <InfiniteScroll
-                        dataLength={Page}
-                        next={scrollToEnd}
-                        hasMore={true}
-                        style={{overflow:'visible'}}
-                        >
-                {user && user.notification && user.notification.slice(0, Page).map(x => <div>
-                <NamePicNotification type={x.type} by={x.by} id={user._id} post={x.post} comment={x.comment} />
-                
+                {/* {user.notification.map(x => <div>
+                 <h1><br>{x.type}</br> {' by '} <b>{x.byName}</b></h1>
+                <p>{x.text}</p> 
+                </div> )}         */}
+                {user && user.notification.map(x => 
+                <div className='pro-card px-5' onClick={()=>history.push(`${x.link}`)} >
+                <h1><b>{x.type}{' by '}{x.byName}</b> </h1>
+                <p>{x.text}</p> 
                 </div>)}
 
-                </InfiniteScroll>
 
-                </div>
+                </Container>
         )
 }

@@ -1,9 +1,13 @@
+const { default: axios } = require('axios');
+
 const io = require('socket.io')(5002)
 
 io.on('connection', socket => {
   const id = socket.handshake.query.id
   socket.join(id)
   console.log('socket connected');
+  console.log(id);
+  axios.put(`http://127.0.0.1:5001/api/chat/online/${id}`)
 
   socket.on('send-message', ({ recipients, text }) => {
 
@@ -29,6 +33,13 @@ io.on('connection', socket => {
     })}
       
   )
+
+
+  socket.on("disconnecting", (reason) => {
+    console.log('socket disconnected');
+    console.log(id);
+    axios.put(`http://127.0.0.1:5001/api/chat/offline/${id}`)
+  });
 
 
 

@@ -5,12 +5,10 @@ import SingleGig from '../components/SingleGig'
 import { Col, Container, Pagination, Row  } from 'react-bootstrap';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { MDBCol } from "mdbreact";
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link, useParams ,useHistory } from 'react-router-dom';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -19,9 +17,6 @@ import BackspaceIcon from '@material-ui/icons/Backspace';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-
 
 
 
@@ -29,9 +24,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 export default function ExploreGigs(props) {
 
 
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const {
       title = 'all',
@@ -83,7 +75,7 @@ export default function ExploreGigs(props) {
     const updateUrl = () => {
       
       console.log(title);
-      history.push(`/explore-gig/title/${Title || 'all' }/tags/${ TAGS.length > 0 ? TAGS.toString().replaceAll(",","+") : 'all' }/min/${Min || 0}/max/${Max || 0}/delivery/${Delivery || 0}/country/${Country || 'all'  }/language/${Language || 'all'  }/sort/${Sort || 'rating'}/pageNumber/${PageNumber || 1}`)
+      history.push(`/explore-gig/title/${Title || 'all' }/tags/${ TAGS.length > 0 ? TAGS.toString().split(',').join('+') : 'all' }/min/${Min || 0}/max/${Max || 0}/delivery/${Delivery || 0}/country/${Country || 'all'  }/language/${Language || 'all'  }/sort/${Sort || 'rating'}/pageNumber/${PageNumber || 1}`)
       
 
     }

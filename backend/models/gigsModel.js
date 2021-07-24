@@ -52,7 +52,8 @@ const gigsSchema = new mongoose.Schema(
 
         jobDone : {type : Number , default:0 },
         totalRatings : {type : Number , default : 0} ,
-        finalRating : {type : Number , default:0 }
+        finalRating : {type : Number , default:0 } ,
+        country : {type : String } ,
 
 
 } ,

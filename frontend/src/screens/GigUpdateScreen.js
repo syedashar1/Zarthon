@@ -10,7 +10,16 @@ import BackspaceIcon from '@material-ui/icons/Backspace';
 import { motion } from 'framer-motion';
 import { Col, Container, Row } from 'react-bootstrap';
 import CheckIcon from '@material-ui/icons/Check';
+import countryList from './countries'
 
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
 
 export default function GigUpdateScreen(props) {
 
@@ -29,6 +38,7 @@ export default function GigUpdateScreen(props) {
     const [Nego, setNego] = useState(false)
     const [Tags, setTags] = useState([])
     const [aTag, setATag] = useState('')
+    const [Country, setCountry] = useState('')
 
     const [Bname, setBname] = useState('')
     const [Bprice, setBprice] = useState(0)
@@ -74,6 +84,7 @@ export default function GigUpdateScreen(props) {
                 setPics(res.data.gigPics)
                 setNego(res.data.negotiable)
                 setTags(res.data.tags)
+                setCountry(res.data.country)
 
                 setBname(res.data.beginner.title)
                 setBdesc(res.data.beginner.desc)
@@ -151,7 +162,8 @@ export default function GigUpdateScreen(props) {
         description : Description , 
         gigPics : Pics ,
         negotiable : Nego,
-        tags : Tags , 
+        tags : Tags ,
+        country : Country , 
 
         beginner : {
                 title : Bname ,
@@ -254,6 +266,18 @@ export default function GigUpdateScreen(props) {
         </div>
         </Slide>
         
+        <br/>
+        <div  className='form text-center'>
+                <h1 className='fl' >Set Country : {' '} {Country} </h1>
+                <FormControl>
+                <InputLabel id="demo-mutiple-name-label">Name</InputLabel>
+                <Select  labelId="demo-mutiple-name-label" id="demo-mutiple-name" value={Country} input={<Input />} onChange={(e)=>setCountry(e.target.value)}>
+                {countryList.map((name) => ( <p><MenuItem key={name} onClick={()=>setCountry(name)} value={name} >{name}</MenuItem></p> ))}
+                </Select>
+                </FormControl>
+        </div>
+        
+
         <br/>
         <div className='row center top'>
         

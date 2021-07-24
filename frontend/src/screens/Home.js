@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
 import { Col, Row , Container } from 'react-bootstrap'
 import Button from '@material-ui/core/Button';
+import { useSelector } from 'react-redux';
+import ChatApp from '../chat/components/ChatApp';
 
-export default class Home extends Component {
-        render() {
-                return (
-                        <div>
+export default function Home() {
+
+
+        const userInfo = useSelector((state) => state.userSignin.userInfo);
+
+
+        return (
+                <div>
+
+                        {userInfo && userInfo._id && <ChatApp show={true} />}
+
                         <Container>
                         <Row>
                         <Col>
@@ -19,11 +28,16 @@ export default class Home extends Component {
                         </Col>
                         <Col>
                         <div style={{height:'400px' , width:'100%' , backgroundSize:'cover' ,backgroundPosition:'center'
-                        , backgroundImage:'url(https://img.freepik.com/free-vector/modern-business-team-working-open-office-space_74855-5541.jpg?size=626&ext=jpg)' }} />
+                        , backgroundImage:'url(https://img.freepik.com/free-vector/modern-business-team-working-open-office-space_74855-5541.jpg?size=626&ext=jpg)' }} >
+
+
+                        </div>
+
+                        
                         </Col>
                         </Row>
                         </Container>
                         </div>
-                )
-        }
+        )
 }
+

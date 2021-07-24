@@ -12,6 +12,7 @@ const teachSchema = new mongoose.Schema(
         languages : [String] ,
         negotiate : {type : Boolean , default : false},
         link : {type : String},
+        country : {type : String} ,
 
         earned : {type : Number} ,
         lastPay : {type : String} ,
@@ -30,6 +31,12 @@ const teachSchema = new mongoose.Schema(
 
         totalApplied : {type : Number , default : 0},
         appliedSuccess : {type : Number , default : 0},
+
+        videos : [{
+                title : {type : String },
+                video : {type : String},
+                description : {type : String},
+        }]
 
 
 } ,

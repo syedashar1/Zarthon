@@ -2,19 +2,9 @@ import React, { useEffect , useState } from 'react';
 import axios from 'axios';
 import { Col, Container, Image, Row ,ProgressBar} from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
-import NamePic from './NamePic';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLikes, like , comment, editCaption, deletePost } from '../actions/likeCommenentActions';
-import Modal from "react-modal"
 import { useSocket } from '../chat/contexts/SocketProvider';
 import { motion } from 'framer-motion';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import Bounce from 'react-reveal/Bounce';
-import Jump from 'react-reveal/Jump';
 import LinesEllipsis from 'react-lines-ellipsis'
 
 export default function SinglePro({pro , type}) {
@@ -36,13 +26,13 @@ export default function SinglePro({pro , type}) {
         <div>
     
         {User && pro && pro._id &&
-        <div className='pro-card' onClick={()=>history.push(`/${type}/${pro._id}`)}>
+        <div className= {type=='proworker' ? 'pro-card' : 'teach pro-card '} onClick={()=>history.push(`/${type}/${pro._id}`)}>
         <Container>
         <br/>
         <Row>
         <Col lg={1} md={2} ><Image src={User.profilePic} style={{width:'75px' , height:'75px' , borderRadius:'50%', cursor :'pointer',margin : '0px' }} alt='a pic' 
         onClick={ () => {history.push(`/user/${User._id}`)} }/></Col>
-        <Col lg={1} md={2}>
+        <Col lg={2} md={2}>
         <p style={{marginBottom:'-5px',color:'green',fontSize:'20px'}} >{User.name}</p>
         <p style={{marginBottom:'0px',fontWeight:'bold'}}>{pro.title}</p>
         <p style={{marginBottom:'-5px',fontSize:'12px'}}><i>{'Pakistan'}</i></p>
@@ -57,9 +47,10 @@ export default function SinglePro({pro , type}) {
         <Col sm={3}><b>${pro.earned || 0}</b>{' earned'}</Col>
         <Col sm={3}>
         
-        <p>{'Job Success '+ pro.appliedSuccess}%</p>
+        <p>{'Job Success '+ (pro.appliedSuccess/pro.totalApplied)*100}%</p>
         <div className='progress-barsub'>
-        <motion.div className="progress-bar" initial={{ width: 0 }} animate={{ width: 66 + '%' }}/>
+        <motion.div className="progress-bar" initial={{ width: 0 }} 
+        animate={{ width: (pro.appliedSuccess/pro.totalApplied)*100 + '%' }}/>
         </div>
         
         </Col>

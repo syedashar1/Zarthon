@@ -12,11 +12,14 @@ const proSchema = new mongoose.Schema(
         languages : [String] ,
         negotiate : {type : Boolean , default : false},
         link : {type : String},
+        country : {type : String} ,
 
-        earned : {type : Number} ,
+        earned : {type : Number , default : 0} ,
         lastPay : {type : String} ,
 
         reviews : [{
+            
+            jobTitle : {type : String} ,
             by : {type : String},
             name : {type : String} ,
             review : {type : String } ,
@@ -35,7 +38,9 @@ const proSchema = new mongoose.Schema(
                 title : {type : String },
                 video : {type : String},
                 description : {type : String},
-        }]
+        }] ,
+
+        jobsAt : [String]
 
 
 } ,

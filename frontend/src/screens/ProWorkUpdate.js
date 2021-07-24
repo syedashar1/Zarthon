@@ -56,6 +56,7 @@ export default function UserProfile(props) {
         const [aTag, setATag] = useState('')
         const [Negotiate, setNegotiate] = useState(false)
         const [Avaliable, setAvaliable] = useState(0)
+        const [Country, setCountry] = useState('')
 
         const [Languages, setLanguages] = useState([])
         const [L1, setL1] = useState('')
@@ -81,6 +82,7 @@ export default function UserProfile(props) {
                     setAvaliable(res.data.avaliableHours)
                     setTags(res.data.tags)
                     setLanguages(res.data.languages)
+                    setCountry(res.data.country)
 
 
                 })
@@ -110,6 +112,7 @@ export default function UserProfile(props) {
                         languages : Languages ,
                         negotiate : Negotiate,
                         avaliableHours : Avaliable,
+                        country : Country ,
                         
                 }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
                 .then(res => {
@@ -155,7 +158,7 @@ export default function UserProfile(props) {
                 {user && <p>setting up a professional account for {user.userName}</p>}
 
 
-                <form onSubmit={submitHandler}>
+                <form onSubmit={submitHandler} className='form text-center' >
                 <h1>What describes your Work ?</h1>
                 <input onChange={e=>setTiltle(e.target.value)} value={Tiltle}  ></input>
 
@@ -165,11 +168,11 @@ export default function UserProfile(props) {
                 <h2>What will you charge for it hourly?</h2>
                 <input type='number' onChange={e=>setBudget(e.target.value)} value={Budget}   ></input>
                 <h3>Is it negotiable ?</h3>
-                <div className='custom-control custom-switch'>
+                <div className='custom-control custom-switch row center'>
                 <input type='checkbox' className='custom-control-input' id='x'
                 onChange={()=>handleToggle()}readOnly
                 />
-                <label className='custom-control-label' htmlFor='x'>Is it negotiable ?</label>
+                <label className='custom-control-label' htmlFor='x'></label>
                 </div>
 
                 <h1>Select your skills</h1>

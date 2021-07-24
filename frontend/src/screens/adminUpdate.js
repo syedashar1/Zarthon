@@ -23,16 +23,21 @@ export default function AdminUpdate() {
     }
 
     return (
-        <div>{userInfo && userInfo.email == 'admin@gmail.com' && <div>
+        <div>{userInfo && userInfo.email == 'admin22@gmail.com' && <div>
         
-        <form onSubmit={submit}>
-        <h1>Enter Update Title</h1>
-        <input onChange={(e)=>setTitle(e.target.value)} ></input>
+        <br/><br/>
 
-        <h2>Enter Update</h2>
-        <input onChange={(e)=>setUpdate(e.target.value)}></input>
+        <form onSubmit={submit} className='form text-center' >
+        <h1>Enter Update Title</h1>
+        <input onChange={(e)=>setTitle(e.target.value)} placeholder='Enter the update' ></input>
+
+        <h1>Enter Update</h1>
+        <textarea rows='10' cols='50' onChange={(e)=>setUpdate(e.target.value)} placeholder='Enter the update' /><br/>
         <button type='submit' >Enter</button>
         </form>
+
+        <br/><br/>
+
         
         </div>
 

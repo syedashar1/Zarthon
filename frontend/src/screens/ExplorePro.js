@@ -59,16 +59,19 @@ export default function ExplorePro(props) {
 
 
     useEffect(() => {
-        axios.get('/api/professionals').then(res => {
-            setPros(res.data)
+        axios.get(`/api/professionals?title=${title }&tags=${ tags }&min=${min}&max=${max}&successRatio=${successRatio}&earned=${earned}&country=${country}&language=${language  }&sort=${sort}&pageNumber=${pageNumber}`)
+        .then(res => {
+            setPros(res.data.pros)
+            setPages(res.data.pages)
+            setTotalPros(res.data.totalPros)
         }
         )
         
-    }, [])
+    }, [props.match.params])
 
     const updateUrl = () => {   
         console.log(title);
-        // history.push(`/explore-gig/title/${Title || 'all' }/tags/${ TAGS.length > 0 ? TAGS.toString().replaceAll(",","+") : 'all' }/min/${Min || 0}/max/${Max || 0}/delivery/${Delivery || 0}/country/${Country || 'all'  }/language/${Language || 'all'  }/sort/${Sort || 'rating'}/pageNumber/${PageNumber || 1}`)
+        history.push(`/explore-pro/title/${Title || 'all' }/tags/${ TAGS.length > 0 ? TAGS.toString().split(',').join('+') : 'all' }/min/${Min || 0}/max/${Max || 0}/successRatio/${SuccessRatio || 0}/earned/${Earned || 0}/country/${Country || 'all'  }/language/${Language || 'all'  }/sort/${Sort || 'rating'}/pageNumber/${PageNumber || 1}`)
       }
       
     useEffect(() => {
@@ -197,7 +200,7 @@ export default function ExplorePro(props) {
 
       <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}aria-controls="panel1d-content" id="panel1d-header" >
-        <h2 >Sort Gigs</h2>
+        <h2 >Sort Professionals</h2>
       </AccordionSummary>
       <AccordionDetails><p><hr/>
       
@@ -205,7 +208,7 @@ export default function ExplorePro(props) {
       <RadioGroup aria-label="gender" name="gender1" value={Sort} onChange={(e)=>setSort(e.target.value)} >
         <FormControlLabel value="rating" control={<Radio />} label="Highest Ratings" />
         <FormControlLabel value="mostjobs" control={<Radio />} label="Most Tasks Done" />
-        <FormControlLabel value="new" control={<Radio />} label="New Gigs" />
+        <FormControlLabel value="new" control={<Radio />} label="New Talent" />
       </RadioGroup>
 
       </p></AccordionDetails>
@@ -217,7 +220,7 @@ export default function ExplorePro(props) {
     <Col md={9}>
 
     <form className="row center " onSubmit={(e)=>{e.preventDefault();updateUrl() }} >
-      <input onChange={(e)=>setTitle(e.target.value)} className="form-control" type="text" placeholder="Search Gigs" aria-label="Search" style={{width:'600px' , fontSize:'30px'}} />
+      <input onChange={(e)=>setTitle(e.target.value)} className="form-control" type="text" placeholder="Search Professionals" aria-label="Search" style={{width:'600px' , fontSize:'30px'}} />
       <IconButton type="submit"  aria-label="search"> <SearchIcon  style={{fontSize:'30px'}} /></IconButton>
       </form>
     <br/><p style={{textAlign:'right' , paddingRight:'20px' , fontWeight:'bolder' , color:'gray' }} >{TotalPros + ' Professionals Found' }</p><br/>
@@ -225,7 +228,7 @@ export default function ExplorePro(props) {
     <div className="" style={{minHeight:'1000px'}}>
         
         <Container>
-        {Pros && Pros.map(pro => <SinglePro pro={pro} />)}
+        {Pros && Pros.map(pro => <SinglePro pro={pro} type='proworker' />)}
         </Container>
         
     </div><br/><br/>

@@ -49,7 +49,7 @@ render() {
                 <input type="text" id="email" placeholder="Enter userName" required onChange={(e) => this.setState({ email : e.target.value})}></input>
                 </div>
                 <div>
-                <input type="password" id="password" placeholder="Enter password" required onChange={(e) => this.setState({ password : e.target.value})}></input>
+                <input type="password" id="password" placeholder="Enter password"  onChange={(e) => this.setState({ password : e.target.value})}></input>
                 { this.props.signinLoading &&  <p>Siging in...</p> }
                 { this.props.signinError &&  this.props.signinError }
                 </div>

@@ -12,7 +12,7 @@ const UploadFormProfilePic = () => {
   const types = ['image/png', 'image/jpeg'];
 
   const options = {
-    maxSizeMB: 0.06,
+    maxSizeMB: 0.04,
     maxWidthOrHeight: 720,
     useWebWorker: true
   }

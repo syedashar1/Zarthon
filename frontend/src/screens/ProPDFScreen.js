@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import { projectFirestore, projectStorage, timestamp } from '../firebase/config';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
-
+import { motion } from 'framer-motion';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 export default function ProPDFScreen() {
 
@@ -18,7 +19,6 @@ export default function ProPDFScreen() {
 
   const handleChange = (e) => {
     e.preventDefault();
-
     if(e.target.files[0].type == 'application/pdf' ){
         console.log(e.target.files[0])
         setFile(e.target.files[0])
@@ -59,12 +59,19 @@ export default function ProPDFScreen() {
 
 
     return (
-        <div>
+        <div className='portfolio '>
+
 
       
+      <div className='row center'>
+                <label />
+                <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                border: '1px solid transparent' }} type="submit" onClick={()=>history.push('/profile')}> Skip </button>
+      </div>
 
 
         <form className='text-center' >
+        <p style={{fontSize:'35px',color:'grey'}} > Upload Portfolio <PictureAsPdfIcon style={{fontSize:'65px',color:'grey'}}/></p>
       <label className=''>
         <input type="file" onChange={handleChange} ></input>
         {File && <h6>{File.name }</h6>}
@@ -74,15 +81,16 @@ export default function ProPDFScreen() {
       <div className="output">
         { error && <div className="error">{ error }</div>}
         { File && <div>{ File.name }</div> }
-        <h1>{Perc}%</h1>
+        <div className='progress-barsub'>
+        <motion.div className="progress-bar" initial={{ width: 0 }} animate={{ width: Perc + '%' }}/>
+        </div>
         
       </div>
-
-    
+      
     </form>
 
 
-        <button>Skip</button>
+
             
         </div>
     )

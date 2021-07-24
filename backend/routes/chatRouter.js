@@ -201,5 +201,23 @@ chatRouter.put( '/singletext/:id', expressAsyncHandler(async (req, res) => {
 
 
 
+chatRouter.put( '/online/:id' ,expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  user.active = true ;
+  await user.save()
+})
+);
+chatRouter.put( '/offline/:id' ,expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  user.active = false ;
+  user.lastSeen = Date.now()
+  await user.save()
+})
+);
+
+
+
+
+
 export default chatRouter;
 

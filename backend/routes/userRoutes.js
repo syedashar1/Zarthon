@@ -120,11 +120,30 @@ userRouter.post( '/signin', expressAsyncHandler(async (req, res) => {
 );
 
 
+
+userRouter.put( '/notification/:id' , isAuth ,expressAsyncHandler(async (req, res) => {
+  
+  const user = await User.findById(req.params.id);
+  user.notification.push({
+    type : req.body.type ,
+    byName : req.body.byName ,
+    text : req.body.text ,
+    link : req.body.link
+  })
+
+  user.newNotifications = user.newNotifications + 1 
+  await user.save()
+  res.send('notified')
+  console.log(user.notification);
+
+})
+);
+
+
+
 userRouter.get( '/:id' , expressAsyncHandler(async (req, res) => {
         const user = await User.findById(req.params.id);
-        // user.notification.reverse()
-        // user.posts.reverse()
-        // user.savedPosts.reverse()
+        user.notification.reverse()
         res.send(user);
       })
 );

@@ -91,40 +91,39 @@ gigRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
 
 
   const country = req.query.country || '';
+
   const countryFilter = country ? { country: { $regex: country=== "all" ? '' : country , $options: 'i' } } : {};
 
   const language = req.query.language || '';
-  const languageFilter = language ? { languages : { $in: language } } : {};
-  
+  const languageFilter = language && language !== 'all' ? { languages : { $in: language } } : {};
+  console.log(languageFilter);
+  console.log(tagsFilter);
 
   const pageSize = 9 ;
   const page = Number(req.query.pageNumber) || 1;
 
   const totalGigs = await Gig.count({
 
-        // ...titleFilter ,
-    // ...minpriceFilter ,
-    // ...maxpriceFilter ,
-    // ...tagsFilter ,
+    ...titleFilter ,
+    ...minpriceFilter ,
+    ...maxpriceFilter ,
+    ...tagsFilter ,
     // ...countryFilter ,
-    // ...languageFilter ,
-    // ...deliveryFilter
+    ...languageFilter ,
+    ...deliveryFilter
 
   })
 
 
   const gigs = await Gig.find({ 
-    // ...titleFilter ,
-    // ...minpriceFilter ,
-    // ...maxpriceFilter ,
-    // ...tagsFilter ,
+    ...titleFilter ,
+    ...minpriceFilter ,
+    ...maxpriceFilter ,
+    ...tagsFilter ,
     // ...countryFilter ,
-    // ...languageFilter ,
-    // ...deliveryFilter
-  }).sort(sortOrder)
-
-
-  // .skip(pageSize * (page - 1)).limit(pageSize);
+    ...languageFilter ,
+    ...deliveryFilter
+  }).sort(sortOrder).skip(pageSize * (page - 1)).limit(pageSize);
 
 
   res.send({gigs , totalGigs , page , pages: Math.ceil(totalGigs / pageSize) })
@@ -173,7 +172,7 @@ gigRouter.post('/postpro' , isAuth , expressAsyncHandler( async (req , res) => {
 gigRouter.put('/update-gig/:id' , isAuth ,expressAsyncHandler( async (req , res) => {
 
     const gig = await Gig.findById(req.params.id)
-    if(gig){
+    if(gig && gig.by ==req.user._id){
     
         
         gig.title = req.body.title || gig.title ;
@@ -181,6 +180,7 @@ gigRouter.put('/update-gig/:id' , isAuth ,expressAsyncHandler( async (req , res)
         gig.gigPics = req.body.gigPics || gig.gigPics ;
         gig.negotiable = req.body.negotiable || gig.negotiable ;
         gig.tags = req.body.tags || gig.tags ; 
+        gig.country = req.body.country || gig.country ; 
 
         gig.beginner = req.body.beginner || gig.beginner ; 
         gig.standard = req.body.standard || gig.standard ; 

@@ -11,7 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import ExploreIcon from '@material-ui/icons/Explore';
 import SearchNav from './SearchNav';
-
+import WorkIcon from '@material-ui/icons/Work';
+import SchoolIcon from '@material-ui/icons/School';
 
 class Navbar extends Component {
 
@@ -40,8 +41,16 @@ class Navbar extends Component {
 
        { this.props.userInfo? (
         <div className="header__right">
+        
 
 
+        {user && user.proAccount && <IconButton>
+        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-jobs" ><WorkIcon fontSize="large" className="heart__icon" /></Link>
+        </IconButton>}
+
+        {user && user.teachAccount && <IconButton>
+        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-teacher-jobs" ><SchoolIcon fontSize="large" className="heart__icon" /></Link>
+        </IconButton>}
 
 
         
@@ -95,6 +104,10 @@ class Navbar extends Component {
                         <li> <Link  style={{color:'#f6f6f6'}} to="/profile"> Edit Profile </Link> </li>
                         {user && !user.proAccount && <li> <Link  style={{color:'#f6f6f6'}} to="/joinAsProWorker"> Join as Professional Account </Link> </li>}
                         {user && !user.teachAccount && <li> <Link  style={{color:'#f6f6f6'}} to="/joinAsTeacher"> Join as Teacher Account </Link> </li>}
+                        <hr/>
+                        {user && <li> <Link  style={{color:'#f6f6f6'}} to="/my-jobs"> My Jobs </Link> </li>}
+                        {user && <li> <Link  style={{color:'#f6f6f6'}} to="/gig-orders"> My Orders </Link> </li>}
+                        {user && <li> <Link  style={{color:'#f6f6f6'}} to="/gig-orders-placed"> Placed Orders </Link> </li>}
                         <hr/>
                         <li> <Link  style={{color:'#f6f6f6'}} to="/updates"> Updates</Link> </li>
                         <hr/>
