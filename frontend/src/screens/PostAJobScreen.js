@@ -56,12 +56,45 @@ export default function PostAJobScreen(props) {
         ])
 
 
-        useEffect(() => { if (!userInfo) { history.push('/signin?redirect=postAJob') } }, [ user ])
+        useEffect(() => { if (!userInfo || !user ) { history.push('/signin?redirect=postAJob') } }, [ user ])
 
 
         const submitHandler = (e) => {
 
                 e.preventDefault()
+
+                if(!window.confirm('Do u want to post this job for 6 connect points')){return}
+
+
+                if(props.match.params.type == 'teacher') {
+                
+                        axios.post(`/api/jobsteacher/postjob` , {
+                                by : userInfo._id ,
+                                title : Tiltle ,
+                                budget : Budget , 
+                                minBudget : MinBudget , 
+                                maxBudget : MaxBudget , 
+                                description : Description,
+                                tags : Tags ,
+                                location : Location ,
+                                scale : Scale ,
+                                type : Type 
+                                
+                        }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                        .then(res => {
+                                if(res.data == 'not enough' ){
+                                    history.push('/buy-connects/notenough')                                  
+                                }
+        
+                        })
+
+                        return;
+
+                
+                }
+
+
+
                 
                 axios.post(`/api/jobs/postjob` , {
                         by : userInfo._id ,
@@ -77,11 +110,14 @@ export default function PostAJobScreen(props) {
                         
                 }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
                 .then(res => {
-                        if(res.data){
-                                console.log(res.data);                              
+                        if(res.data == 'not enough' ){
+                            history.push('/buy-connects/notenough')                                  
                         }
-
-                } )
+                        else {
+                            history.push(`/job/${res.data._id}`)     
+                        }
+                        
+                })
                 
 
 
@@ -92,10 +128,10 @@ export default function PostAJobScreen(props) {
 
         return (
         <div>
-
 <div  className='form text-center'>
                 <p className='logo'>Zarthon Job</p>
                 {user && <p>(Posting a Job for {user.userName})</p>}
+                <p className='remember' >Posting a Job on Zarthon takes 6 connect points.</p>
                 </div>
 
                 
@@ -172,15 +208,16 @@ export default function PostAJobScreen(props) {
 
 
 
-
+                <br/><br/>
                 <div className='row center'>
                 <label />
-                <button className='fl' style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
+                <button className='fl' style={{ borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
                 border: '1px solid transparent' }} type="submit"> Next </button>
                 
                 
                 </div>
                 </form>
+                <br/><br/>
                         
         </div>
         )

@@ -98,7 +98,9 @@ export default function Charts({beginner , standard , premium , id}) {
 
         <div className='row center'>
           <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',margin:'20px',
-          border: '1px solid transparent' }} type="submit"> {'Continue with ' + standard.price }$ </button>
+          border: '1px solid transparent' }} type="submit" 
+          onClick={()=>history.push(`/gig-payment-gateway/${id}/${'standard'}`)}
+           > {'Continue with ' + standard.price }$ </button>
          </div>
 
       </Tab>
@@ -143,7 +145,9 @@ export default function Charts({beginner , standard , premium , id}) {
 
         <div className='row center'>
           <button style={{height :'55px' , borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',margin:'20px',
-          border: '1px solid transparent' }} type="submit"> {'Continue with ' + premium.price }$ </button>
+          border: '1px solid transparent' }} type="submit" 
+          onClick={()=>history.push(`/gig-payment-gateway/${id}/${'premium'}`)}
+          > {'Continue with ' + premium.price }$ </button>
          </div>
 
       </Tab>

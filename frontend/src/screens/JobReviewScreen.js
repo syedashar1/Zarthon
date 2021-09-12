@@ -26,12 +26,28 @@ export default function JobReviewScreen(props) {
 
 
         useEffect(() => {
+
+
+                if(props.match.params.type=='teacher'){
+                axios.get(`/api/jobsteacher/${props.match.params.job}`).then(res=>{
+                        setJob(res.data)
+                        console.log(res.data);
+                        axios.get(`/api/teachers/user/${props.match.params.person}`).then(res=>setPro(res.data) )
+                        axios.get(`/api/users/single/${props.match.params.person}`).then(res=>setUser(res.data))
+                        }) 
+                return ;      
+                }
+
                 axios.get(`/api/jobs/${props.match.params.job}`).then(res=>{
                     setJob(res.data)
                     console.log(res.data.responses);
                     axios.get(`/api/professionals/user/${props.match.params.person}`).then(res=>setPro(res.data) )
                     axios.get(`/api/users/single/${props.match.params.person}`).then(res=>setUser(res.data))
                 })
+
+                
+
+
         
             }, [])
 
@@ -45,8 +61,16 @@ export default function JobReviewScreen(props) {
                         type : 'Job ended and Reviewed' ,
                         byName : userInfo.userName ,
                         text : `Your job (${Job.title}) ended and you got a new review !`,
-                        link : `/proworker/${Pro._id}` ,
+                        link : `/${props.match.params.type=='teacher'?'teacher':'proworker'}/${Pro._id}` ,
                         }
+
+                if(props.match.params.type=='teacher'){
+                axios.put(`/api/jobsteacher/job-review/${Job._id}/${Pro._id}`, x , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                .then(res => {if(res.data){ 
+                        axios.put(`/api/users/notification/${Pro.by}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                        history.push(`/job/${res.data}`) } } )
+                return
+                }
                 
                 axios.put(`/api/jobs/job-review/${Job._id}/${Pro._id}`, x , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
                 .then(res => {if(res.data){ 

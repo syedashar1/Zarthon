@@ -17,15 +17,26 @@ export default function SinglePaymentCard({by , type , totalPayed , paymentHisto
         
     
         useEffect(() => {
-                axios.get(`/api/professionals/user/${by}`).then(res=>setPro(res.data) )
+
+                if(type) { axios.get(`/api/teachers/user/${by}`).then(res => setPro(res.data) ) }
+                else {axios.get(`/api/professionals/user/${by}`).then(res => setPro(res.data) )  }
                 axios.get(`/api/users/single/${by}`).then(res=>setUser(res.data))
+                paymentHistory = paymentHistory.reverse()
             }, [])
 
         const endHandler = () => {
                 if( window.confirm(`Are you sure you want to end contract with ${User.name} ?`) ){
+
+
+                        if(by){
+                        axios.put(`/api/jobsteacher/end-payroll/${jobid}/${by}` , { }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                        .then(res=> {if(res.data) history.push(`/job-review/${jobid}/${by}/teacher`) } )
+
+                        return;
+                        }
                 
                         axios.put(`/api/jobs/end-payroll/${jobid}/${by}` , { }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
-                        .then(res=> {if(res.data) history.push(`/job-review/${jobid}/${by}`) } )
+                        .then(res=> {if(res.data) history.push(`/job-review/${jobid}/${by}/pro`) } )
 
 
                 }
@@ -52,7 +63,7 @@ export default function SinglePaymentCard({by , type , totalPayed , paymentHisto
         <button className='fl' style={{ borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
             border: '1px solid transparent'  , fontSize:'20px' }} type="submit" onClick={endHandler} > End </button>{' '}
         <button className='fl' style={{ borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
-            border: '1px solid transparent' , fontSize:'20px' }}  type="submit" onClick={()=>history.push(`/payment/${jobid}/${by}/${'proworker'}`)} > Pay </button>       
+            border: '1px solid transparent' , fontSize:'20px' }}  type="submit" onClick={()=>history.push(`/payment/${jobid}/${by}/${type ? 'teacher' : 'proworker'}`)} > Pay </button>       
         </Col>
 
         </Row>

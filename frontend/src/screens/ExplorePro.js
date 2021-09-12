@@ -89,9 +89,9 @@ export default function ExplorePro(props) {
     <div style={{background:'' ,width:'100%' , textAlign:'center' , padding:'5px'}} >
     <h1>Advanced Filters</h1>
 
-    <Accordion>
+    <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}aria-controls="panel1a-content" id="panel1a-header" >
-          <h2 >Select Skills</h2>
+          <h2 style={{color:'grey'}} >Select Skills</h2>
         </AccordionSummary>
         <AccordionDetails><p><hr/>
           <div className='row center' >
@@ -117,7 +117,7 @@ export default function ExplorePro(props) {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}aria-controls="panel1b-content" id="panel1b-header" >
-          <h2 >Budget</h2>
+          <h2  style={{color:'grey'}}>Budget</h2>
         </AccordionSummary>
         <AccordionDetails><p><hr/>
             <div className='row center ' >
@@ -142,9 +142,9 @@ export default function ExplorePro(props) {
           
       </Accordion>
 
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header" >
-          <h2 >Select Success Ratio</h2>
+          <h2 style={{color:'grey'}} >Select Success Ratio</h2>
         </AccordionSummary>
         <AccordionDetails><p><hr/>
         <input onChange={e=>setSuccessRatio(e.target.value)} type='number' max='100' min='0' value={SuccessRatio}  placeholder='Any' />
@@ -154,11 +154,11 @@ export default function ExplorePro(props) {
           <IconButton><BackspaceIcon style={{fontSize:'30px'}}  onClick={()=>{ setSuccessRatio(0) ; updateUrl() }} /> </IconButton>
           </div>
           </p></AccordionDetails>
-      </Accordion>
+      </Accordion> */}
 
       <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header" >
-        <h2 >Select Total Earned</h2>
+        <h2 style={{color:'grey'}} >Select Total Earned</h2>
       </AccordionSummary>
       <AccordionDetails><p><hr/>
       <input onChange={e=>setEarned(e.target.value)} value={Earned} type='number' placeholder='Any' />
@@ -172,7 +172,7 @@ export default function ExplorePro(props) {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header" >
-          <h2 >Select Country</h2>
+          <h2 style={{color:'grey'}} >Select Country</h2>
         </AccordionSummary>
         <AccordionDetails><p><hr/>
         <input onChange={e=>setCountry(e.target.value)} value={Country}  placeholder='Any' />
@@ -186,7 +186,7 @@ export default function ExplorePro(props) {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}aria-controls="panel1d-content" id="panel1d-header" >
-          <h2 >Prefered Language</h2>
+          <h2 style={{color:'grey'}} >Prefered Language</h2>
         </AccordionSummary>
         <AccordionDetails><p><hr/>
         <input onChange={e=>setLanguage(e.target.value)} value={Language}  placeholder='Any' />
@@ -200,7 +200,7 @@ export default function ExplorePro(props) {
 
       <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}aria-controls="panel1d-content" id="panel1d-header" >
-        <h2 >Sort Professionals</h2>
+        <h2 style={{color:'grey'}} >Sort Professionals</h2>
       </AccordionSummary>
       <AccordionDetails><p><hr/>
       

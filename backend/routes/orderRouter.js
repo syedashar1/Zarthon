@@ -4,6 +4,7 @@ import Gig from '../models/gigsModel.js';
 import Job from '../models/jobModel.js';
 import Order from '../models/orderModel.js';
 import Professional from '../models/proModel.js';
+import Refund from '../models/refundModel.js';
 import Teacher from '../models/teachModel.js';
 import User from '../models/userModel.js'
 import { isAuth } from '../utils.js'
@@ -12,9 +13,58 @@ import { isAuth } from '../utils.js'
 const orderRouter = express.Router();
 
 
+orderRouter.get('/my-pending-refunds-amount' , isAuth ,expressAsyncHandler( async (req , res) => {
+
+  console.log('here');
+  const refunds = await Refund.find({gigOwner : req.user._id})
+  var refundAmount = 0
+  for (let i = 0; i < refunds.length; i++) { refundAmount = refundAmount + refunds[i].amount  }
+  res.send({
+    amount : refundAmount ,
+    total : refunds.length
+  })
+
+}))
+
+orderRouter.get('/all-refunds' , isAuth ,expressAsyncHandler( async (req , res) => {
+
+  const refunds = await Refund.find({gigOwner : req.user._id})
+  res.send(refunds)
+
+}))
+
+
+
 orderRouter.post( '/orderplace' , isAuth ,expressAsyncHandler(async (req, res) => {
     const newOrder = new Order(req.body);
     const x = await newOrder.save();
+    const gig = await Gig.findById(req.body.gig)
+    gig.earned = gig.earned + 0.8*Number(req.body.totalPrice)
+    gig.orderPlaced.push(x._id)
+    
+    const sellerUser = await User.findById(gig.by)
+    sellerUser.netIncome = sellerUser.netIncome + 0.8*Number(req.body.totalPrice) 
+    sellerUser.transactions.push({
+      type : 'Gig Earning' , 
+      date : Date.now() ,
+      detail : `You got paid for your gig ${gig.title}` ,
+      amount : 0.8*Number(req.body.totalPrice) ,
+    })
+
+    const buyer = await User.findById(req.user._id)
+    buyer.usedForPurchases = buyer.usedForPurchases + Number(req.body.totalPrice) 
+    buyer.transactions.push({
+      type : 'Gig Buying' , 
+      date : Date.now() ,
+      detail : `You paid for gig ${gig.title}` ,
+      amount : Number(req.body.totalPrice) ,
+    })
+
+    await buyer.save()
+    await sellerUser.save()
+    await gig.save()
+    console.log(gig);
+
     res.send(x)
     console.log('ordered');    
   })
@@ -41,6 +91,16 @@ orderRouter.put( '/finished/:id' , isAuth ,expressAsyncHandler(async (req, res) 
 })
 );
 
+
+
+orderRouter.put( '/startwork/:id' , isAuth ,expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  order.status = 'working'
+  await order.save()
+  res.send('working')  
+})
+);
+
 orderRouter.get( '/gig-order/:id' , isAuth ,expressAsyncHandler(async (req, res) => {
   console.log(req.params.id);
   const order = await Order.findById(req.params.id);
@@ -48,6 +108,9 @@ orderRouter.get( '/gig-order/:id' , isAuth ,expressAsyncHandler(async (req, res)
   res.send(order)  
 })
 );
+
+
+
 
 orderRouter.put( '/gig-review/:id' , isAuth ,expressAsyncHandler(async (req, res) => {
 
@@ -64,12 +127,17 @@ orderRouter.put( '/gig-review/:id' , isAuth ,expressAsyncHandler(async (req, res
     rating : req.body.rating ,
     pic :  req.body.pic ,
   })
+
+  gig.jobDone = gig.jobDone + 1 
+  gig.totalRatings = gig.totalRatings + req.body.rating 
+  gig.finalRating = gig.totalRatings / gig.jobDone 
+
+
   order.status = 'finished and reviewed' ;
   await gig.save()
   await order.save()
-  
 
-  console.log(gig.reviews);
+  
   res.send(gig._id)  
 })
 );
@@ -123,6 +191,7 @@ orderRouter.put( '/payment-gateway/:job/:person' , isAuth ,expressAsyncHandler(a
    
   const pro = await Professional.findOne({by : req.params.person })
   pro.earned = pro.earned + Number(req.body.amount)
+
 
   
   await job.save()  
@@ -332,6 +401,75 @@ orderRouter.put('/update-job/:id' , isAuth ,expressAsyncHandler( async (req , re
     
 
 }))
+
+
+
+orderRouter.put('/ask-refund/:id' , isAuth ,expressAsyncHandler( async (req , res) => {
+
+  const order = await Order.findById(req.params.id)
+  if(req.user._id !== order.placedBy ) {res.status(404).send('Not Your Order') ; return ;}
+
+
+  order.status = 'Refund Requested by Buyer'
+  const refund = new Refund({
+    gig : order.gig ,
+    orderId : req.params.id ,
+    gigOwner : order.gigOwner ,
+    buyerId : req.user._id ,
+    buyerName : req.user.userName ,
+    amount : Number(req.body.amount) ,
+    reason : req.body.reason ,
+  })
+
+  const newRefund = await refund.save();
+  await order.save();
+
+  res.send(newRefund)
+
+}))
+
+
+orderRouter.put('/pay-refund/:order/:refund' , isAuth ,expressAsyncHandler( async (req , res) => {
+
+  const order = await Order.findById(req.params.order)
+  const refund = await Refund.findById(req.params.refund)
+  const buyer = await User.findById(order.placedBy)
+  const seller = await User.findById(req.user._id)
+
+  if(order.status == 'Refund given by Seller'){res.status(404).send('Already Refunded') ; return ;}
+  if(req.user._id !== order.gigOwner ) {res.status(404).send('Not Your Order') ; return ;}
+
+  buyer.netIncome = buyer.netIncome + refund.amount
+  seller.withdrawn = seller.withdrawn + refund.amount
+  order.status = 'Refund given by Seller'
+
+  buyer.transactions.push({
+    type : 'Refund Recieved' , 
+    date : Date.now() ,
+    detail : `You got refunded for gig ${gig.title}` ,
+    amount : Number(refund.amount) ,
+  })
+
+  seller.transactions.push({
+    type : 'Refund Paid' , 
+    date : Date.now() ,
+    detail : `You refunded ${buyer.userName} for gig ${gig.title}` ,
+    amount : Number(refund.amount) ,
+  })
+
+
+  await Refund.findByIdAndDelete(req.params.refund)
+  await order.save();
+  await buyer.save();
+  await seller.save();
+
+  res.send(req.params.refund)
+
+}))
+
+
+
+
 
 
 

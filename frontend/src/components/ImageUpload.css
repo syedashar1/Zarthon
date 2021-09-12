@@ -1,6 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
 
+
+html {
+  font-size: 62.5% !important; /* 16px x 62.5 = 10px = 1rem */
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  font-size: 1.6rem !important;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+  overflow-x: hidden;
+  
+}
 
 .AppFireGram{
   max-width: 960px;
@@ -103,51 +120,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-html {
-  font-size: 62.5%; /* 16px x 62.5 = 10px = 1rem */
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-}
-body {
-  margin: 0;
-  font-size: 1.6rem;
-  font-family: Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: white;
-  overflow-x: hidden;
-  
-}
 #root {
   overflow-x: hidden;
   height: 100%;
@@ -183,7 +155,7 @@ footer {
 }
 /* Common */
 h1 {
-  font-size: 1.8rem;
+  font-size: 1.8rem ;
   padding: 1rem 0;
 }
 h2 {
@@ -937,4 +909,120 @@ button:hover{
 
 .smile {
   font-size: 60px !important;
+}
+
+
+.shadd {
+  -webkit-box-shadow: -1px 0px 94px -14px rgba(0,0,0,0.75);
+-moz-box-shadow: -1px 0px 94px -14px rgba(0,0,0,0.75);
+box-shadow: -1px 0px 94px -14px rgba(0,0,0,0.75);
+}
+
+
+.lineword {
+  
+  
+  width: 100%; 
+  text-align: center; 
+  border-bottom: 2px solid rgb(200, 200, 200); 
+  line-height: 0.1em;
+  margin: 10px 0 20px; 
+  font-size: 60px;
+  margin-top: 170px;
+  margin-bottom: 40px;
+  color: #404040;
+  font-family: 'Pacifico', cursive;
+} 
+
+.lineword span { 
+   background:#fff; 
+   padding:0 10px; 
+}
+
+
+
+
+.tasd {
+  font-family: 'Urbanist' , cursive ;
+}
+
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+footer {
+  background-color: #555;
+  color: #bbb;
+  line-height: 1.5;
+  margin-top: 300px;
+}
+footer a {
+  text-decoration: none;
+  color: #eee;
+}
+
+.ft-title {
+  color: #fff;
+  font-family: "Merriweather", serif;
+  font-size: 40px;
+  padding-bottom: 0.625rem;
+}
+/* Sticks footer to bottom */
+
+/* Footer main */
+.ft-main {
+  padding: 1.25rem 1.875rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+@media only screen and (min-width: 29.8125rem /* 477px */) {
+  .ft-main {
+    justify-content: space-evenly;
+  }
+}
+@media only screen and (min-width: 77.5rem /* 1240px */) {
+  .ft-main {
+    justify-content: space-evenly;
+  }
+}
+.ft-main-item {
+  padding: 1.25rem;
+  min-width: 12.5rem;
+}
+
+/* Footer main | Newsletter form */
+
+
+/* Footer social */
+.ft-social {
+  padding: 0 1.875rem 1.25rem;
+}
+.ft-social-list {
+  display: flex;
+  justify-content: center;
+  border-top: 1px #777 solid;
+  padding-top: 1.25rem;
+}
+.ft-social-list li {
+  margin: 0.5rem;
+  font-size: 1.25rem;
+}
+/* Footer legal */
+.ft-legal {
+  padding: 0.9375rem 1.875rem;
+  background-color: #333;
+}
+.ft-legal-list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.ft-legal-list li {
+  margin: 0.125rem 0.625rem;
+  white-space: nowrap;
+}
+/* one before the last child */
+.ft-legal-list li:nth-last-child(2) {
+    flex: 1;
 }

@@ -14,6 +14,12 @@ const jobRouter = express.Router();
 
 jobRouter.post( '/postjob' , isAuth ,expressAsyncHandler(async (req, res) => {
     
+
+    const user = await User.findById(req.user._id)
+    if( user.connects < 6 ){ res.send('not enough') ; return }
+    user.connects = user.connects - 6
+    await user.save()
+
     const newJob = new Job(req.body);
     const x = await newJob.save();
     res.send(x)
@@ -21,6 +27,87 @@ jobRouter.post( '/postjob' , isAuth ,expressAsyncHandler(async (req, res) => {
 
   })
 );
+
+
+jobRouter.put( '/invite/:job/:pro' , isAuth ,expressAsyncHandler(async (req, res) => {
+    
+  const job = await Job.findById(req.params.job)
+  if(job.by === req.user._id){
+
+    job.invitations.push({
+      to : req.params.pro 
+    })
+
+  }
+  await job.save()
+  console.log('refered'); 
+  res.send('refered')   
+})
+);
+
+
+jobRouter.put( '/reject-invite/:job/:pro' , isAuth ,expressAsyncHandler(async (req, res) => {
+    
+  const job = await Job.findById(req.params.job)
+    
+  for (let i = 0; i < job.invitations.length; i++) {
+    
+    if(job.invitations[i].to === req.params.pro ){ 
+      
+      job.invitations[i].status = 'rejected'
+      await job.save()
+      console.log('canceled invitation');
+      return ;
+ 
+     } 
+    
+  }
+
+   
+})
+);
+
+
+
+jobRouter.put( '/reffersomeelse/:job/:person' , isAuth ,expressAsyncHandler(async (req, res) => {
+  console.log('here');  
+  const job = await Job.findById(req.params.job)
+  const pro = await Professional.findOne({by : req.user._id})
+  const person = await Professional.findById(req.params.person)
+
+  console.log(pro._id);
+  
+
+  for (let i = 0; i < job.invitations.length; i++) {
+    
+    console.log(job.invitations[i]);
+    if(  job.invitations[i].to == pro._id && job.invitations[i].status == 'Sent' ){ 
+      
+      job.invitations[i].status = 'refered someone less'
+
+      job.referals.push({
+        by : pro._id ,
+        to : req.params.person ,
+      })
+
+      await job.save()
+      console.log('reffered someone else');
+      res.send('reffered someone else')
+      return;
+ 
+     }
+    
+  }
+
+  console.log('not happened');
+  res.send('not happened')
+
+   
+})
+);
+
+
+
 
 
 jobRouter.get( '/my-certificate/:id',expressAsyncHandler(async (req, res) => {
@@ -39,12 +126,26 @@ jobRouter.get( '/auth-certificate/:id',expressAsyncHandler(async (req, res) => {
 jobRouter.put( '/submitproposal/:id' , isAuth ,expressAsyncHandler(async (req, res) => {
     
 
-  const job = await Job.findById(req.params.id)
+  const job = await Job.findById(req.params.id)  
+  var free = false ;
+
+  for (let i = 0; i < job.invitations.length; i++) {
+    if(jobs.invitations[i].to === req.user._id && jobs.invitations[i].status == 'Sent' ) free = true ;
+    if(jobs.referals[i].to === req.user._id) free = true ;
+    
+  }
+
+  if(!free){
+    const user = await User.findById(req.user._id)
+    if( user.connects < 5 ){ res.send('not enough') ; return }
+    user.connects = user.connects - 5
+    await user.save()
+  }
+
   job.responses.push({
     by : req.user._id ,
     response : req.body.response
   })
-   
   const pro = await Professional.findOne({by : req.user._id })
   pro.totalApplied = pro.totalApplied + 1
 
@@ -95,6 +196,7 @@ jobRouter.put( '/payment-gateway/:job/:person' , isAuth ,expressAsyncHandler(asy
    
   const pro = await Professional.findOne({by : req.params.person })
   pro.earned = pro.earned + Number(req.body.amount)
+  pro.lastPay = Date.now()
 
 
 
@@ -187,8 +289,16 @@ jobRouter.put( '/payment-gateway/:job/:person' , isAuth ,expressAsyncHandler(asy
 
 
 
+  const sellerUser = await User.findById(pro.by)
+  sellerUser.netIncome = sellerUser.netIncome + Number(req.body.amount) 
+  sellerUser.transactions.push({
+    type : 'Pro Earning' , 
+    date : Date.now() ,
+    detail : `You got paid for your in professional service for job : ${job.title}` ,
+    amount : Number(req.body.amount) ,
+  })
 
-  
+  await sellerUser.save()
   await job.save()  
   await pro.save()
 
@@ -281,27 +391,8 @@ jobRouter.get( '/singlejobinfo/:id' , isAuth ,expressAsyncHandler(async (req, re
 
 
 
-// gigRouter.get( '/delete/:id'  ,expressAsyncHandler(async (req, res) => {
-    
-// const deletedProduct = await Gig.findById(req.params.id);
-//   if (deletedProduct) {
-//     await deletedProduct.remove();
-//     res.send({ message: 'Product Deleted' });
-//   } else {
-//     res.send('Error in Deletion.');
-//   }  
-
-// })
-// );
-
-
-
 jobRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
   
-  const jobs = await Job.find({ })
-  res.send(jobs);
-  return;
-
   console.log(req.query);
 
   const title = req.query.title || '';
@@ -314,64 +405,15 @@ jobRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
   }
 
 
-  const delivery = req.query.delivery && Number(req.query.delivery) !==  0 ? Number(req.query.delivery) : 0;
-  const deliveryFilter = delivery  ?  {'beginner.delivery' : { $lte: delivery  } } : {};
-
-  
-  const min = req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
-  const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
-  const minpriceFilter = min  ?  { 'beginner.price' : { $gte: min  } } : {};
-  const maxpriceFilter = max  ? {'premium.price' : { $lte: max  } } : {};
-
-  
-  const order = req.query.order || '';
-  const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
-
-  
-  const sortOrder = order === 'rating' ? { finalRating : 1 } : 
-                    order === 'mostjobs' ? { jobDone : -1 } : 
-                    order === 'new' ?  { _id: -1 } : {_id : 1}
-
-
-
-  const country = req.query.country || '';
-  const countryFilter = country ? { country: { $regex: country=== "all" ? '' : country , $options: 'i' } } : {};
-
-  const language = req.query.language || '';
-  const languageFilter = language ? { languages : { $in: language } } : {};
-  
-
-  const pageSize = 9 ;
-  const page = Number(req.query.pageNumber) || 1;
-
-  const totalGigs = await Gig.count({
-
-        // ...titleFilter ,
-    // ...minpriceFilter ,
-    // ...maxpriceFilter ,
-    // ...tagsFilter ,
-    // ...countryFilter ,
-    // ...languageFilter ,
-    // ...deliveryFilter
-
+  const totalJobs = await Job.count({
+    ...titleFilter , 
+    ...tagsFilter
   })
-
-
-  const gigs = await Gig.find({ 
-    // ...titleFilter ,
-    // ...minpriceFilter ,
-    // ...maxpriceFilter ,
-    // ...tagsFilter ,
-    // ...countryFilter ,
-    // ...languageFilter ,
-    // ...deliveryFilter
-  }).sort(sortOrder)
-
-
-  // .skip(pageSize * (page - 1)).limit(pageSize);
-
-
-  res.send({gigs , totalGigs , page , pages: Math.ceil(totalGigs / pageSize) })
+  const jobs = await Job.find({ 
+    ...titleFilter , 
+    ...tagsFilter})
+  
+  res.send({jobs , totalJobs })
 
 
 
@@ -394,52 +436,6 @@ jobRouter.get( '/:id' , expressAsyncHandler(async (req, res) => {
   })
 );
 
-
-
-
-
-jobRouter.post('/postpro' , isAuth , expressAsyncHandler( async (req , res) => {
-
-    const existPro = await Teacher.findOne({by : req.user._id})
-    if( existPro ) {
-      res.status(401).send({ message: 'pro account already exists' });
-      return;
-    }
-
-    const newPro = new Teacher(req.body);
-    const x = await newPro.save();
-    res.send(x)
-
-}))
-
-
-jobRouter.put('/update-job/:id' , isAuth ,expressAsyncHandler( async (req , res) => {
-
-    const gig = await Job.findById(req.params.id)
-    if(gig && gig.by ==req.user._id ){
-    
-        
-        gig.title = req.body.title || gig.title ;
-        gig.description = req.body.description || gig.description ;
-        gig.tags = req.body.tags || gig.tags ; 
-        gig.scale = req.body.scale || gig.scale ; 
-        gig.maxBudget = req.body.maxBudget || gig.maxBudget ; 
-        gig.minBudget = req.body.minBudget || gig.minBudget ; 
-        gig.location = req.body.location || gig.location ; 
-        gig.budget = req.body.budget || gig.budget ; 
-
-        await gig.save()
-        console.log('job post updated' , gig._id);
-        res.send(gig._id)
-
-
-    }
-    else{
-      console.log('gig doesnt exist');
-    }
-    
-
-}))
 
 
 

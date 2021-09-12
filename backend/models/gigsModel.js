@@ -55,6 +55,9 @@ const gigsSchema = new mongoose.Schema(
         finalRating : {type : Number , default:0 } ,
         country : {type : String } ,
 
+        earned : {type : Number , default : 0} ,
+        orderPlaced : [ String ] 
+
 
 } ,
 {

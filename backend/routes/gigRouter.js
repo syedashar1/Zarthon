@@ -1,6 +1,7 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import Gig from '../models/gigsModel.js';
+import Order from '../models/orderModel.js';
 import Professional from '../models/proModel.js';
 import Teacher from '../models/teachModel.js';
 import User from '../models/userModel.js'
@@ -78,7 +79,7 @@ gigRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
   const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
   const minpriceFilter = min  ?  { 'beginner.price' : { $gte: min  } } : {};
   const maxpriceFilter = max  ? {'premium.price' : { $lte: max  } } : {};
-
+  
   
   const order = req.query.order || '';
   const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
@@ -139,7 +140,11 @@ gigRouter.get( '/'  ,expressAsyncHandler(async (req, res) => {
 gigRouter.get( '/user/:id' , expressAsyncHandler(async (req, res) => {
     const gigs = await Gig.find({by : req.params.id })
     console.log(req.params.id);
-    res.send(gigs)
+
+    var totalEarned = 0
+    for (let i = 0; i < gigs.length; i++) { totalEarned = totalEarned + gigs[i].earned }
+
+    res.send({gigs , totalEarned })
   })
 );
 
@@ -150,7 +155,27 @@ gigRouter.get( '/:id' , expressAsyncHandler(async (req, res) => {
   })
 );
 
+gigRouter.get( '/inque-and-working/:id' , expressAsyncHandler(async (req, res) => {
+  
+  const gig = await Gig.findById(req.params.id)
+  const orders = await Order.find({  '_id': { $in: gig.orderPlaced} } );
 
+  var inQue = 0 
+  var inWorking = 0
+
+  for (let i = 0; i < orders.length; i++) {
+    
+    if(orders[i].status == 'in Queue'){ inQue = inQue + 1 }
+    if(orders[i].status == 'working'){ inWorking = inWorking + 1 }
+    
+  }
+
+
+  res.send({inQue , inWorking})
+
+  
+})
+);
 
 
 

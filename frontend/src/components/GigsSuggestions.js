@@ -33,7 +33,7 @@ export default function GigsSuggestions({tags}) {
     }, [])
     
     return (
-        <div><h1>Similar Gigs</h1>{Gigs && <Carousel responsive={responsive}>
+        <div>{Gigs && <Carousel responsive={responsive}>
         {Gigs.map( gig => <SingleGig gig={gig} /> )}
 
 

@@ -45,11 +45,11 @@ class Navbar extends Component {
 
 
         {user && user.proAccount && <IconButton>
-        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-jobs" ><WorkIcon fontSize="large" className="heart__icon" /></Link>
+        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-jobs/title/all/tags/all" ><WorkIcon fontSize="large" className="heart__icon" /></Link>
         </IconButton>}
 
         {user && user.teachAccount && <IconButton>
-        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-teacher-jobs" ><SchoolIcon fontSize="large" className="heart__icon" /></Link>
+        <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore-jobs-teacher/title/all/tags/all" ><SchoolIcon fontSize="large" className="heart__icon" /></Link>
         </IconButton>}
 
 
@@ -64,17 +64,6 @@ class Navbar extends Component {
         </a>
         
       </IconButton>
-
-
-
-
-      <IconButton>
-      <Link style={{color:'#f6f6f6',marginBottom:'10px'}}  to="/explore"><ExploreIcon fontSize="large" className="heart__icon" /> 
-        </Link>
-        
-      </IconButton>
-
-
 
         
       <IconButton>
@@ -105,6 +94,8 @@ class Navbar extends Component {
                         {user && !user.proAccount && <li> <Link  style={{color:'#f6f6f6'}} to="/joinAsProWorker"> Join as Professional Account </Link> </li>}
                         {user && !user.teachAccount && <li> <Link  style={{color:'#f6f6f6'}} to="/joinAsTeacher"> Join as Teacher Account </Link> </li>}
                         <hr/>
+                        {user && <li> <Link  style={{color:'#f6f6f6'}} to="/postAJob/professional"> Post A Job </Link> </li>}
+                        {user && <li> <Link  style={{color:'#f6f6f6'}} to="/postAJob/teacher"> Post A Teaching Job </Link> </li>}
                         {user && <li> <Link  style={{color:'#f6f6f6'}} to="/my-jobs"> My Jobs </Link> </li>}
                         {user && <li> <Link  style={{color:'#f6f6f6'}} to="/gig-orders"> My Orders </Link> </li>}
                         {user && <li> <Link  style={{color:'#f6f6f6'}} to="/gig-orders-placed"> Placed Orders </Link> </li>}
@@ -126,10 +117,9 @@ class Navbar extends Component {
         <Link to={'/joinAsProWorker'} style={{color:'white',marginRight:'15px'}}>Join as Professional</Link>
         <Link to={'/joinAsTeacher'} style={{color:'white',marginRight:'15px'}}>Join as Teacher</Link>
         <Link to={'/register'} style={{color:'white',marginRight:'15px'}}>Create Gigs</Link>
-        <Link to={'/postajob'} style={{color:'white',marginRight:'15px'}}>Post a Job</Link>
-        <Link to={'/signin'} ><Button variant="outlined" size='large' color="primary"><h4>Log In</h4></Button></Link>
-        <Link to={'/register'} ><Button variant="contained" size='large' color="primary"><h4>Register</h4></Button></Link>
-
+        <Link to={'/postAJob/professional'} style={{color:'white',marginRight:'15px'}}>Post a Job</Link>
+        <Link to={'/signin'} ><Button variant="outlined" size='large' style={{backgroundColor:'white' , border:'1px solid rgb(156,189,221)' }} ><h4>Log In</h4></Button></Link>{' '}
+        <Link to={'/register'} ><Button variant="contained" variant="contained" size='large' style={{backgroundColor:'rgb(156,189,221)' }}><h4>Register</h4></Button></Link>
         </div>
 
        ) }

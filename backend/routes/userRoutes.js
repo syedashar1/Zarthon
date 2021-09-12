@@ -44,6 +44,16 @@ userRouter.get("/search", async (req, res) => {
 }); 
 
 
+userRouter.put( '/buyconnects' , isAuth ,expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id)
+  user.connects = user.connects + Number(req.body.amount)
+  await user.save()
+  console.log(user.connects);
+  res.send('done')
+})
+);
+
+
 
 // the idea is to suggest 10 users from user that he has in chat or people that like his posts and send in shuffle manner
 
@@ -144,6 +154,8 @@ userRouter.put( '/notification/:id' , isAuth ,expressAsyncHandler(async (req, re
 userRouter.get( '/:id' , expressAsyncHandler(async (req, res) => {
         const user = await User.findById(req.params.id);
         user.notification.reverse()
+        user.transactions.reverse()
+        user.avaliableForWithdrawal = user.netIncome - user.withdrawn - user.pendingClearance
         res.send(user);
       })
 );
@@ -180,6 +192,7 @@ userRouter.post('/register' , expressAsyncHandler( async (req , res) => {
       
         
         newUser.password = bcrypt.hashSync( newUser.password , 8 )
+        newUser.connects = 50 
       
         const createdUser = await newUser.save();
         console.log(createdUser);

@@ -8,12 +8,20 @@ import { isAuth } from '../utils.js'
 const professionalRouter = express.Router();
 
 
+
+professionalRouter.get( '/getmyfav' , isAuth  , expressAsyncHandler(async (req, res) => {
+    console.log('asdasd');
+    const user = await User.findById(req.user._id)
+    const pros = await Professional.find({  '_id' : { $in: user.proFav} } );
+    res.send(pros)
+  })
+);
+
+
 professionalRouter.get( '/' , expressAsyncHandler(async (req, res) => {
         
     // const pros = await Professional.find({})
     // res.send(pros)
-
-  console.log(req.query);
 
   const title = req.query.title || '';
   const titleFilter = title ? { title: { $regex: title=== "all" ? '' : title , $options: 'i' } } : {};
@@ -30,20 +38,22 @@ professionalRouter.get( '/' , expressAsyncHandler(async (req, res) => {
   const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
   const successRatio = req.query.successRatio && Number(req.query.successRatio) !== 0 ? Number(req.query.successRatio) : 0;
   const earned = req.query.earned && Number(req.query.earned) !== 0 ? Number(req.query.earned) : 0;
-  
   const earnedFilter = earned  ?  { earned : { $gte: earned  } } : {};
-  const successRatioFilter = successRatio  ?  { appliedSuccess : { $gte: successRatio  } } : {};
+  // const successRatioFilter = successRatio  ?  { appliedSuccess : { $gte:  Number( (appliedSuccess/totalApplied).toFixed(2) * 100 )  } } : {};
   const minpriceFilter = min  ?  { budget : { $gte: min  } } : {};
   const maxpriceFilter = max  ? { budget : { $lte: max  } } : {};
 
-  
-  const order = req.query.order || '';
-  const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
+  const priceFilter = (min || max) ? { budget : { $gte: min || 0 , $lte: max || 99999 } } : {}
 
   
+  const order = req.query.sort || '';
+  const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
+
+  console.log(order);
   const sortOrder = order === 'rating' ? { finalRating : 1 } : 
                     order === 'mostjobs' ? { jobDone : -1 } : 
                     order === 'new' ?  { _id: -1 } : {_id : 1}
+  console.log(sortOrder);
 
 
 
@@ -53,19 +63,15 @@ professionalRouter.get( '/' , expressAsyncHandler(async (req, res) => {
 
   const language = req.query.language || '';
   const languageFilter = language && language !== 'all' ? { languages : { $in: language } } : {};
-  console.log(languageFilter);
-  console.log(tagsFilter);
 
-  const pageSize = 9 ;
+  const pageSize = 15 ;
   const page = Number(req.query.pageNumber) || 1;
 
   const totalPros = await Professional.count({
 
     ...titleFilter ,
-    ...minpriceFilter ,
-    ...maxpriceFilter ,
+    ...priceFilter ,
     ...tagsFilter ,
-    // ...countryFilter ,
     ...languageFilter ,
     ...earnedFilter ,
 
@@ -74,10 +80,8 @@ professionalRouter.get( '/' , expressAsyncHandler(async (req, res) => {
 
   const pros = await Professional.find({ 
     ...titleFilter ,
-    ...minpriceFilter ,
-    ...maxpriceFilter ,
+    ...priceFilter ,
     ...tagsFilter ,
-    // ...countryFilter ,
     ...languageFilter ,
     ...earnedFilter ,
 
@@ -91,11 +95,27 @@ professionalRouter.get( '/' , expressAsyncHandler(async (req, res) => {
 );
 
 
-professionalRouter.get( '/user/:id'  , expressAsyncHandler(async (req, res) => {
-        
+professionalRouter.get( '/user/:id'  , expressAsyncHandler(async (req, res) => { 
     const pro = await Professional.findOne({by : req.params.id })
     res.send(pro)
+  })
+);
 
+
+professionalRouter.get( '/username/:name'  , expressAsyncHandler(async (req, res) => { 
+    const user = await User.findOne({userName : req.params.name })
+    if(user && user.proAccount){
+      const pro = await Professional.findOne({by : user._id })
+      pro.profilePic = user.profilePic
+      pro.name = user.name
+      res.send({
+        name : user.name , 
+        profilePic : user.profilePic , 
+        _id : pro._id , 
+        title : pro.title
+      })
+    }
+    else res.send(null)
   })
 );
 
@@ -110,6 +130,15 @@ professionalRouter.get( '/:id' , expressAsyncHandler(async (req, res) => {
 );
 
 
+
+professionalRouter.put( '/addfav/:id' , isAuth , expressAsyncHandler(async (req, res) => {
+        
+    const user = await User.findById(req.user._id)
+    if( !user.proFav.includes(req.params.id) ) user.proFav.push(req.params.id)
+    await user.save()
+    console.log(user.proFav);
+  })
+);
 
 
 
@@ -153,6 +182,9 @@ professionalRouter.put('/editpro' , isAuth ,expressAsyncHandler( async (req , re
     
 
 }))
+
+
+
 
 
 

@@ -2,9 +2,16 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Col, Container, Image, Row , Media} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
+import IconButton from '@material-ui/core/IconButton';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 export default function TeachWorkScreen(props) {
     const [User, setUser] = useState(null)
@@ -96,9 +103,52 @@ export default function TeachWorkScreen(props) {
                 </div> )}
 
         </div>
+
+        <div style={{textAlign:'left'}}>
+        
+        <h1 style={{fontSize:'30px' , fontFamily:'Encode Sans SC'}} > Work History </h1>        
+        <hr style={{height:'13px'}}/>
+        <h1> {'Worked for '} {pro.jobsAt.length} {' Jobs on Zarthon'} </h1>
+        {pro.reviews.map(x=> <h1>
+        
+        <Media  >
+        <div className="mr-3" style={{width:'85px',height:'85px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
+        <img src={x.pic} onClick={()=>history.push(`/user/${x.by}`)} style={{width:'100%'}} />
+        </div>
+        <Media.Body>
+            <p style={{margin:'-10px 0px'}} > <b> {x.jobTitle} </b> </p>
+            <h1 style={{color:'grey'}} >by {x.name}</h1>
+            
+            <p>
+            {
+            x.rating >= 5 ? <SentimentVerySatisfiedIcon style={{fontSize:'35px' }}/> :
+            x.rating >= 4 ? <SentimentSatisfiedAltIcon style={{fontSize:'35px' }}/> : 
+            x.rating >= 3 ? <SentimentSatisfiedIcon style={{fontSize:'35px' }}/> : 
+            x.rating >= 2 ? <SentimentDissatisfiedIcon style={{fontSize:'35px' }} /> :
+            <SentimentVeryDissatisfiedIcon style={{fontSize:'35px' }} />
+            }
+        
+
+
+            <span style={{color:'grey',fontSize:'20px'}} > ({x.rating}/5) </span>
+            
+            </p>
+            <p>
+            {x.review}
+            </p>
+        </Media.Body>
+        </Media>
+        <hr style={{height:'13px'}}/>
+        </h1> ) }
+
+        </div>
+
+
         </Container>
 
         }
+
+
 
         <br/><br/><br/>
         

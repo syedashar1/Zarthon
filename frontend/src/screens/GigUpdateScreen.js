@@ -282,7 +282,7 @@ export default function GigUpdateScreen(props) {
         <div className='row center top'>
         
         <Slide left>
-        <div className='basic form text-center' >
+        <div className='basic form text-center' style={{width:'100%'}} >
         <h1>Basic Offer</h1>
         <input value={Bname} onChange={(e)=>setBname(e.target.value)} placeholder='title' />
         <br/><br/>
@@ -312,7 +312,7 @@ export default function GigUpdateScreen(props) {
 
 
         <Slide bottom>
-        <div className='standard form text-center' >
+        <div className='standard form text-center' style={{width:'100%'}} >
         <h1>Standard Offer</h1>
         <input value={Sname} onChange={(e)=>setSname(e.target.value)} placeholder='title' />
         <br/><br/>
@@ -339,7 +339,7 @@ export default function GigUpdateScreen(props) {
 
 
         <Slide right>
-        <div className='premium  form text-center' >
+        <div className='premium form text-center' style={{width:'100%'}} >
         <h1>Premium Offer</h1>
         
         <input value={Pname} onChange={(e)=>setPname(e.target.value)} placeholder='title' />

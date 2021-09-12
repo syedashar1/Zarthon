@@ -16,7 +16,7 @@ export default function GigOrdersScreen(props) {
 
         useEffect(() => {
                 axios.get(`/api/orders/myorders` , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
-                .then(res=>setOrders(res.data) )
+                .then(res=>setOrders(res.data.reverse() ) )
         }, [])
 
 
@@ -37,7 +37,7 @@ export default function GigOrdersScreen(props) {
                         </thead>
                         <tbody>
                         {Orders.map((x,i)=>    <tr>
-                        <td>{i}</td>
+                        <td>{i+1}</td>
                         <td>{x.title}</td>
                         <td>{x.totalPrice}</td>
                         <td>{x.paidAt.split('T')[0].split('-').reverse().join('-') } </td>

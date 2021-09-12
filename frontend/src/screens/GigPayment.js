@@ -6,6 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Charts from '../components/Charts'
 import CheckIcon from '@material-ui/icons/Check';
 
+
+import ReactDOM from "react-dom"
+
+const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
+
 export default function GigPayment(props) {
 
         const [User, setUser] = useState(null)
@@ -16,7 +21,7 @@ export default function GigPayment(props) {
         const [Offer, setOffer] = useState(null)
         const [Quantity, setQuantity] = useState(1)
         const [OfferObject, setOfferObject] = useState(null)
-        const [Details, setDetails] = useState('')
+        const [Details, setDetails] = useState('Write some details')
 
 
         useEffect(() => {
@@ -52,15 +57,46 @@ export default function GigPayment(props) {
                         const notificationObject = {
                                 type : 'New Gig Order' ,
                                 byName : userInfo.userName ,
-                                text : `A new order of amount $${OfferObject.price * Quantity } !`,
+                                text : `A new order of amount $${ 0.8* OfferObject.price * Quantity } !`,
                                 link : `/gig-orders` ,
                                 }
                         axios.put(`/api/users/notification/${Gig.by}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
-                                        
+                        
+                        history.push(`/gig-order/${res.data._id}`)
+                                              
 
 
                     }}  )
         }
+
+
+
+
+        const createOrder = (data, actions) =>{
+                return actions.order.create({
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: OfferObject.price*Quantity ,
+                      },
+                    },
+                  ],
+                });
+              };
+            
+
+        const onApprove = (data, actions) => {
+
+                handlePayment()
+
+                return actions.order.capture();
+        };
+
+
+
+
+
+
 
 
         return (
@@ -128,8 +164,10 @@ export default function GigPayment(props) {
       
       )}
       <div className='text-center' >
-      <button onClick={handlePayment} style={{ borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white', border: '1px solid transparent' }}> 
-        PayPal</button>
+
+        <PayPalButton createOrder={(data, actions) => createOrder(data, actions)}
+        onApprove={(data, actions) => onApprove(data, actions)} />  
+ 
 
       </div>
         </Col>

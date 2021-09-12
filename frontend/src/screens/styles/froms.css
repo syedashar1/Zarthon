@@ -4,20 +4,26 @@ body{
 }
 
 
-.backtotop{
-  width: 10.5em;
-  height: 10em;
+.backtotopp{
+  width: 80px;
+  height: 80px;
   box-shadow: rgba(60, 64,67, 0.3) 0 1px 2px 0   ;
   background-color: white;
   position: absolute;
-  top: -5.2rem;
-  left: 50%;
+  top: -3.3rem;
+  left: 20%;
   transform: translateX(-50%);
   border-radius: 50%;
   overflow: hidden;
+  background-color: rgb(98, 181, 253);
   
 }
-
+.tbtp {
+        background-color:   rgb(97, 224, 141)
+}
+.sdfsdf {
+        background-color:   rgb(229, 129, 227)
+}
 
 
 input:focus { 
@@ -41,7 +47,7 @@ input:focus {
         border-radius: 20px;
         padding-top: 30px;
         padding-bottom: 30px;
-        margin-top: 10px;
+        margin-top: 20px;
         box-shadow: rgba(60, 64,67, 0.3) 0 1px 2px 0 , rgba(60, 64,67, 0.15) 0 1px 3px 1px  ;
 }
 

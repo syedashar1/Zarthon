@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Col, Container, Image, Row , Carousel } from 'react-bootstrap';
+import { Col, Container, Image, Row , Carousel , Media} from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import Charts from '../components/Charts'
 import LinesEllipsis from 'react-lines-ellipsis';
 import { StickyContainer, Sticky } from 'react-sticky';
+
+import IconButton from '@material-ui/core/IconButton';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 export default function GigScreen(props) {
 
@@ -14,12 +21,22 @@ export default function GigScreen(props) {
     const history = useHistory()
     const dispatch = useDispatch()
     const userInfo = useSelector((state) => state.userSignin.userInfo);
-
+    const [InQue, setInQue] = useState(0)
+    const [InWorking, setInWorking] = useState(0)
 
     useEffect(() => {
         axios.get(`/api/gigs/${props.match.params.id}`).then(res=>{setGig(res.data)
             axios.get(`/api/users/single/${res.data.by}`).then(res2=>setUser(res2.data))
+
+            axios.get(`/api/gigs/inque-and-working/${props.match.params.id}`)
+            .then(res2=>{setInQue(res2.data.inQue) ; setInWorking(res2.data.inWorking) })
+            
+
         })
+
+
+
+
     }, [])
 
 
@@ -52,6 +69,8 @@ export default function GigScreen(props) {
         onClick={ () => {history.push(`/user/${User._id}`)} }/><b>{User.name}</b></h3>
         
         <br/>
+        <span style={{color:'grey',fontSize:'20px'}} > {Gig.finalRating}{' rating out of '} {Gig.jobDone} {' orders.'} </span>
+        <span style={{color:'grey',fontSize:'25px'}} > {InQue} {' orders in Queue , '} {InWorking} {' orders in Working.'}  </span>
         <Carousel fade style={{maxWidth:'850px'}} id='overview'>
         {Gig.gigPics.map(x=> <Carousel.Item><img style={{height:'550px'}} className="d-block w-100" src={x} /></Carousel.Item>) }
         </Carousel>
@@ -112,6 +131,40 @@ export default function GigScreen(props) {
 
             <div id='reviews'>
             <p style={{fontSize:'50px' , fontFamily:'Encode Sans SC'}}>Reviews</p>
+
+            {Gig.reviews.map(x=> <h1>
+        
+        <Media  >
+        <div className="mr-3" style={{width:'85px',height:'85px',borderRadius:'50%', overflow:'hidden' , cursor:'pointer',textAlign:'center'}} >
+        <img src={x.pic} onClick={()=>history.push(`/user/${x.by}`)} style={{width:'100%'}} />
+        </div>
+        <Media.Body>
+            <p style={{margin:'-10px 0px'}} > <b> {x.jobTitle} </b> </p>
+            <h1 style={{color:'grey'}} >by {x.name}</h1>
+            
+            <p>
+            {
+            x.rating >= 5 ? <SentimentVerySatisfiedIcon style={{fontSize:'35px' }}/> :
+            x.rating >= 4 ? <SentimentSatisfiedAltIcon style={{fontSize:'35px' }}/> : 
+            x.rating >= 3 ? <SentimentSatisfiedIcon style={{fontSize:'35px' }}/> : 
+            x.rating >= 2 ? <SentimentDissatisfiedIcon style={{fontSize:'35px' }} /> :
+            <SentimentVeryDissatisfiedIcon style={{fontSize:'35px' }} />
+            }
+        
+
+
+            <span style={{color:'grey',fontSize:'20px'}} > ({x.rating}/5) </span>
+            
+            </p>
+            <p>
+            {x.review}
+            </p>
+            </Media.Body>
+            </Media>
+            <hr style={{height:'13px'}}/>
+            </h1> ) }
+
+
             </div>
 
           </div>

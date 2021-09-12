@@ -62,7 +62,7 @@ export default function Notifications({SocketNotifications , setSocketNotificati
                 </div> )}         */}
                 {user && user.notification.map(x => 
                 <div className='pro-card px-5' onClick={()=>history.push(`${x.link}`)} >
-                <h1><b>{x.type}{' by '}{x.byName}</b> </h1>
+                <h2><b>{x.type}{' by '}{x.byName}</b> </h2>
                 <p>{x.text}</p> 
                 </div>)}
 

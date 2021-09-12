@@ -11,81 +11,75 @@ const teacherRouter = express.Router();
 
 teacherRouter.get( '/' , expressAsyncHandler(async (req, res) => {
         
-  // const pros = await Teacher.find({})
+  // const pros = await Professional.find({})
   // res.send(pros)
 
-      console.log(req.query);
+const title = req.query.title || '';
+const titleFilter = title ? { title: { $regex: title=== "all" ? '' : title , $options: 'i' } } : {};
 
-      const title = req.query.title || '';
-      const titleFilter = title ? { title: { $regex: title=== "all" ? '' : title , $options: 'i' } } : {};
-
-      var tagsFilter = {};
-      if(req.query.tags && req.query.tags != 'all' ){
-      const tags = req.query.tags.split(' ') || '';
-      var tagsFilter = tags ?  { tags: { $all : tags } }  : {}; 
-      }
+var tagsFilter = {};
+if(req.query.tags && req.query.tags != 'all' ){
+const tags = req.query.tags.split(' ') || '';
+var tagsFilter = tags ?  { tags: { $all : tags } }  : {}; 
+}
 
 
 
-      const min = req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
-      const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
-      const successRatio = req.query.successRatio && Number(req.query.successRatio) !== 0 ? Number(req.query.successRatio) : 0;
-      const earned = req.query.earned && Number(req.query.earned) !== 0 ? Number(req.query.earned) : 0;
+const min = req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
+const max = req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
+const successRatio = req.query.successRatio && Number(req.query.successRatio) !== 0 ? Number(req.query.successRatio) : 0;
+const earned = req.query.earned && Number(req.query.earned) !== 0 ? Number(req.query.earned) : 0;
+const earnedFilter = earned  ?  { earned : { $gte: earned  } } : {};
+// const successRatioFilter = successRatio  ?  { appliedSuccess : { $gte:  Number( (appliedSuccess/totalApplied).toFixed(2) * 100 )  } } : {};
+const minpriceFilter = min  ?  { budget : { $gte: min  } } : {};
+const maxpriceFilter = max  ? { budget : { $lte: max  } } : {};
 
-      const earnedFilter = earned  ?  { earned : { $gte: earned  } } : {};
-      const successRatioFilter = successRatio  ?  { appliedSuccess : { $gte: successRatio  } } : {};
-      const minpriceFilter = min  ?  { budget : { $gte: min  } } : {};
-      const maxpriceFilter = max  ? { budget : { $lte: max  } } : {};
-
-
-      const order = req.query.order || '';
-      const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
+const priceFilter = (min || max) ? { budget : { $gte: min || 0 , $lte: max || 99999 } } : {}
 
 
-      const sortOrder = order === 'rating' ? { finalRating : 1 } : 
-                        order === 'mostjobs' ? { jobDone : -1 } : 
-                        order === 'new' ?  { _id: -1 } : {_id : 1}
+const order = req.query.sort || '';
+const rating = req.query.rating && Number(req.query.rating) !== 0 ? Number(req.query.rating) : 0;
+
+console.log(order);
+const sortOrder = order === 'rating' ? { finalRating : 1 } : 
+                  order === 'mostjobs' ? { jobDone : -1 } : 
+                  order === 'new' ?  { _id: -1 } : {_id : 1}
+console.log(sortOrder);
 
 
 
-      const country = req.query.country || '';
+const country = req.query.country || '';
 
-      const countryFilter = country ? { country: { $regex: country=== "all" ? '' : country , $options: 'i' } } : {};
+const countryFilter = country ? { country: { $regex: country=== "all" ? '' : country , $options: 'i' } } : {};
 
-      const language = req.query.language || '';
-      const languageFilter = language && language !== 'all' ? { languages : { $in: language } } : {};
-      console.log(languageFilter);
-      console.log(tagsFilter);
+const language = req.query.language || '';
+const languageFilter = language && language !== 'all' ? { languages : { $in: language } } : {};
 
-      const pageSize = 9 ;
-      const page = Number(req.query.pageNumber) || 1;
+const pageSize = 15 ;
+const page = Number(req.query.pageNumber) || 1;
 
-      const totalTeachers = await Teacher.count({
+const totalPros = await Teacher.count({
 
-        ...titleFilter ,
-        ...minpriceFilter ,
-        ...maxpriceFilter ,
-        ...tagsFilter ,
-        // ...countryFilter ,
-        ...languageFilter ,
-        ...earnedFilter ,
+  ...titleFilter ,
+  ...priceFilter ,
+  ...tagsFilter ,
+  ...languageFilter ,
+  ...earnedFilter ,
 
-      })
+})
 
 
-      const teachers = await Teacher.find({ 
-        ...titleFilter ,
-        ...minpriceFilter ,
-        ...maxpriceFilter ,
-        ...tagsFilter ,
-        // ...countryFilter ,
-        ...languageFilter ,
-        ...earnedFilter ,
+const pros = await Teacher.find({ 
+  ...titleFilter ,
+  ...priceFilter ,
+  ...tagsFilter ,
+  ...languageFilter ,
+  ...earnedFilter ,
 
-      }).sort(sortOrder).skip(pageSize * (page - 1)).limit(pageSize);
+}).sort(sortOrder).skip(pageSize * (page - 1)).limit(pageSize);
 
 
-      res.send({teachers , totalTeachers, page , pages: Math.ceil(totalTeachers / pageSize) })
+res.send({pros , totalPros, page , pages: Math.ceil(totalPros / pageSize) })
 
 
 })

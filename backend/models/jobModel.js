@@ -32,6 +32,16 @@ const jobSchema = new mongoose.Schema(
                         amount : {type : Number , default : 0 } ,
                         paidOn : {type : Date , default: Date.now }
                 }]
+        }] ,
+
+        invitations : [{
+                to : {type : String} ,
+                status : {type : String , default:'Sent' } , 
+        }] ,
+
+        referals : [{
+                by : {type : String} ,
+                to : {type : String } ,
         }]
 
 

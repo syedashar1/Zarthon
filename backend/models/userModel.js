@@ -36,13 +36,6 @@ const userSchema = new mongoose.Schema(
         }] ,
 
 
-        favouriteNotes : [String] ,
-
-
-        sotd : {
-                scent : {type : String} ,
-                about : {type : String} ,
-        } ,
 
         posts : [{
                 pic : {type : String} , 
@@ -68,19 +61,6 @@ const userSchema = new mongoose.Schema(
 
 
 
-
-        decants : [
-                {
-                        name : { type : String } ,
-                        size : { type : Number } ,
-                        avaliable : { type : Number } ,
-                        price : { type : Number } ,
-                        status : {type : String , default : "Avaliable"} ,
-                        description : { type : String } , 
-                        deliveryCharges : { type : Number },
-                        pics : [String]
-                }
-        ] , 
 
 
 
@@ -113,6 +93,26 @@ const userSchema = new mongoose.Schema(
 
         active : {type : Boolean , default : false} ,
         lastSeen  : { type : Date, default: Date.now } ,
+
+        connects : {type : Number , default : 0 } ,
+
+
+        proFav : [String] ,
+        gigFav : [String] ,
+
+        netIncome : {type : Number , default : 0} ,
+        withdrawn : {type : Number , default : 0} ,
+        usedForPurchases : {type : Number , default : 0} ,
+        pendingClearance : {type : Number , default : 0} ,
+        avaliableForWithdrawal : {type : Number , default : 0} ,
+
+        transactions : [{
+                type : {type : String} , 
+                date : { type : Date , default: Date.now} ,
+                detail : {type : String} ,
+                amount : {type : Number},
+        }]
+
 
 
 } ,

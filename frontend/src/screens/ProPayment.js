@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Col, Container, Image, Row ,ProgressBar} from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import ReactDOM from "react-dom"
+
+const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
 
 export default function ProPayment(props) {
 
@@ -20,19 +23,21 @@ export default function ProPayment(props) {
 
 
         useEffect(() => {
-                axios.get(`/api/jobs/${props.match.params.job}`).then(res=>setJob(res.data))
+                axios.get(`/api/${Typee ==='teacher'?'jobsteacher':'jobs'}/${props.match.params.job}`).then(res=>setJob(res.data))
                 axios.get(`/api/users/single/${props.match.params.user}`).then(res=>setUser(res.data))
                 if(Typee=='proworker'){
                         axios.get(`/api/professionals/user/${props.match.params.user}`).then(res=>setPro(res.data) )
                 }
+                if(Typee=='teacher'){
+                        axios.get(`/api/teachers/user/${props.match.params.user}`).then(res=>setPro(res.data) )
+                }
             }, [])
 
         
-        const paymentHandle = (e) => {
+        const paymentHandle = () => {
                 setSending(true)
-                e.preventDefault()
                 
-                axios.put(`/api/jobs/payment-gateway/${props.match.params.job}/${props.match.params.user}` ,
+                axios.put(`/api/${ Typee ==='teacher' ?'jobsteacher':'jobs'}/payment-gateway/${props.match.params.job}/${props.match.params.user}` ,
                 { amount : Amount }, 
                 { headers: { Authorization: `Bearer ${userInfo.token}`} } )
                 .then(res => {
@@ -63,11 +68,36 @@ export default function ProPayment(props) {
 
 
 
+        const createOrder = (data, actions) =>{
+                return actions.order.create({
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: Amount ,
+                      },
+                    },
+                  ],
+                });
+              };
+            
+
+        const onApprove = (data, actions) => {
+
+                paymentHandle()
+
+                return actions.order.capture();
+        };
+
+
+
+
+
+
 
 
         return (
         <div>
-        {Job && User && (Pro || Teach) &&
+        {Job && User && (Pro || Teach) && 
         <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)' , padding:'10px 20px' }}>
         <Row className='form' style={{maxWidth:'100%'}}>
         <Col>
@@ -92,14 +122,14 @@ export default function ProPayment(props) {
 
         </Row>
         <br/><br/>
-        <form className='form text-center' onSubmit={(e)=> { if (window.confirm(`Confirm ${Amount} for ${User.name} ? `)) paymentHandle(e)  }  } >
+        <div className='form text-center'>
         <h1>Send Amount</h1>
         <input onChange={(e)=>setAmount(e.target.value)} min='5' type='number' style={{maxWidth:'150px',fontSize:'25px'}} placeholder='in $' /><br/><br/>
-        <button className='fl' style={{ borderRadius:'0px' ,backgroundColor:'#0095f6' , color:'white',
-            border: '1px solid transparent'  , fontSize:'20px' }} type="submit"> 
-        {Sending ? 'Sending...' : 'Send' }    
-        </button>
-        </form>
+        
+        <PayPalButton createOrder={(data, actions) => createOrder(data, actions)}
+                onApprove={(data, actions) => onApprove(data, actions)} /> 
+
+        </div>
         
         
 

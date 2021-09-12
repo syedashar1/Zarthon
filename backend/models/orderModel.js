@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
   {
-    status : {type : String , default : 'working'},
+    status : {type : String , default : 'in Queue'},
     gig : { type: String, required: true },
     gigOwner : { type: String, required: true },
     placedBy : { type: String, required: true },

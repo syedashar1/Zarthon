@@ -12,6 +12,8 @@ import teacherRouter from './routes/teacherRouter.js';
 import gigRouter from './routes/gigRouter.js';
 import jobRouter from './routes/jobRoutes.js';
 import orderRouter from './routes/orderRouter.js';
+import jobTeacherRouter from './routes/jobTeacherRouter.js';
+import withdrawRouter from './routes/withdrawRoute.js';
 
 
 
@@ -40,7 +42,9 @@ app.use('/api/professionals', professionalRouter);
 app.use('/api/teachers', teacherRouter);
 app.use('/api/gigs', gigRouter);
 app.use('/api/jobs', jobRouter);
+app.use('/api/jobsteacher', jobTeacherRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/withdraw', withdrawRouter);
 
 
 

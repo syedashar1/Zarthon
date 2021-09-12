@@ -22,6 +22,8 @@ export default function SingleGigOrderScreen(props) {
         const [Rating, setRating] = useState(1)
         const [Review, setReview] = useState('')
         const dispatch = useDispatch()
+        const [RefundDiv, setRefundDiv] = useState(false)
+        const [Reason, setReason] = useState('')
 
 
         useEffect(() => {
@@ -63,6 +65,32 @@ export default function SingleGigOrderScreen(props) {
                 }}  )
         }
 
+
+        const startWorkHandle = () => {
+                if (! window.confirm('confirm setting this order as working ?')) {return} ;
+
+                axios.put(`/api/orders/startwork/${props.match.params.id}` , { } ,{ headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                .then(res => {if(res.data) {
+                            
+                        const notificationObject = {
+                                type : 'Started Working on Your Gig!' ,
+                                byName : userInfo.userName ,
+                                text : `A Gig that you ordered ( ${Order.title} ) for amount ${Order.totalPrice} has been is in working phase ! `,
+                                link : `/gig-order/${props.match.params.id}` ,
+                                }
+                        axios.put(`/api/users/notification/${Order.placedBy}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                        .then(res => {if(res.data) alert('order working.')} )
+                                        
+
+
+                }}  )
+        }
+
+
+
+
+
+
         const submitHandle = () => {
                 const x = {
                         review : Review ,
@@ -73,6 +101,31 @@ export default function SingleGigOrderScreen(props) {
                 .then(res => {if(res.data) history.push(`/gigs/${res.data}`) } )
         }
 
+        const refundRequestHandler = () => {
+
+                if(!window.confirm(`Are you sure you want to refund of amount ${0.8*Order.totalPrice}`)) return ;
+
+                axios.put(`/api/orders/ask-refund/${props.match.params.id}`, {
+                        amount : 0.8*Order.totalPrice ,
+                        reason : Reason
+
+                } , { headers: { Authorization: `Bearer ${userInfo.token}`} } ).then(res => {if(res.data){
+                        
+                        
+                        const notificationObject = {
+                                type : 'Refund Request' ,
+                                byName : userInfo.userName ,
+                                text : `A buyer ${userInfo.userName} asked for refund of a gig ( ${Order.title} ) for amount ${res.data.amount}  `,
+                                link : `/gig-order/${props.match.params.id}` ,
+                                }
+                        axios.put(`/api/users/notification/${Order.gigOwner}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                        .then(res => {if(res.data) {alert('Refund Request Submitted') ; setRefundDiv(false) ; setReason(null) }} )
+                } } )
+
+
+
+        }
+
 
 
         return (
@@ -80,15 +133,32 @@ export default function SingleGigOrderScreen(props) {
                 {userInfo && Order &&  <div className='header' style={{ position:'sticky', backgroundColor:'aliceblue'}} >
                 <h2><a href='#'> </a></h2>
                 <h2><a href='#seller'>{ Order.placedBy == userInfo._id ? 'Contact Worker' : 'Contact Client' }</a></h2>
-                {Order.placedBy == userInfo._id && <h2><a href='#'>Ask for Refund</a></h2>}
-                {Order.gigOwner == userInfo._id && <h2><a href='#'>Refund Order</a></h2>}
-                {Order.gigOwner == userInfo._id && <h2><a href='#' onClick={finishHandle} >Set as Finished</a></h2>}
-                {Order.placedBy == userInfo._id && Order.status =='finished' && <h2><a href='#review'>Add a Review !</a></h2>}
+                {Order.placedBy == userInfo._id && Order.status != 'Refund Requested by Buyer' &&  Order.status != 'Refund given by Seller' && <h2 onClick={()=>setRefundDiv(true)} ><a href='#'>Ask for Refund</a></h2>}
+                {Order.gigOwner == userInfo._id && Order.status == 'Refund Requested by Buyer' && <h2><a href='#'>Refund Order</a></h2>}
+                {Order.gigOwner == userInfo._id && Order.status == 'working' && <h2><a href='#' onClick={finishHandle} >Set as Finished</a></h2>}
+                {Order.gigOwner == userInfo._id && Order.status == 'in Queue' && <h2><a href='#' onClick={startWorkHandle} >Set as Working</a></h2>}
+                {Order.placedBy == userInfo._id && Order.status == 'finished' && <h2><a href='#review'>Add a Review !</a></h2>}
                 <h2><a href='#reviews'> </a></h2>
                 </div>}
 
+        {userInfo && Order && RefundDiv && <div className='form p-4' >
+        
+        <h1>Refund  Form</h1>
+        <p>Sad to hear that :/ , make sure to have a conversation with the seller before asking for refund.</p>
+        <p>You will be refunded a credit of ${0.8*Order.totalPrice} by the seller.</p>
+        <p>Reason for the refund : </p>
+        <div className='text-center' >
+        <textarea cols='80' rows='4' onChange={(e)=>setReason(e.target.value)}  value={Reason} />
+        </div>
+        <div className='row center'>
+        <button style={{height :'55px' ,backgroundColor:'#0095f6' , color:'white',
+        border: '1px solid transparent' }} onClick={refundRequestHandler} > Request Refund </button>
+        </div>
 
-                {Order && GigOwner && PlacedBy && <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)' , padding:'10px 20px' }} >
+        </div> }
+
+
+        {Order && GigOwner && PlacedBy && <Container style={{marginTop:'30px' , border:' 1px solid rgba(0,0,0,.125)' , padding:'10px 20px' }} >
                 
 
         <img src={Order.image} style={{width:'300px',height:'200px'}} ></img>
@@ -98,6 +168,7 @@ export default function SingleGigOrderScreen(props) {
         <Row>
         
         <Col>
+
         <div className=' text-center form'  >
         <h1>Placed by</h1>
         <Image src={PlacedBy.profilePic} style={{width:'120px' , height:'120px' , borderRadius:'50%', cursor :'pointer',margin : '0px' }} alt='a pic' 
@@ -121,6 +192,8 @@ export default function SingleGigOrderScreen(props) {
         <div className=' text-center form'  >
         <h1>For Amount</h1>
         <h1 style={{fontSize:'130px' , fontFamily:'Encode Sans SC'}} >{Order.totalPrice}$</h1>
+        {Order.gigOwner == userInfo._id && 
+        <h1 style={{fontSize:'20px' , fontFamily:'Encode Sans SC'}} >Your earning { 0.8*Order.totalPrice}$</h1>}
         </div>
         </Col>
 

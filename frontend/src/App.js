@@ -43,7 +43,11 @@ import GigOrdersScreen from './screens/GigOrdersScreen';
 import SingleGigOrderScreen from './screens/SingleGigOrderScreen';
 import JobReviewScreen from './screens/JobReviewScreen';
 import MyJobsScreen from './screens/MyJobsScreen';
-
+import BiddingBuyScreen from './screens/BiddingBuyScreen';
+import ExploreJobTeacher from './screens/ExploreJobTeacher';
+import './components/ImageUpload.css'
+import RefundsScreen from './screens/RefundsScreen';
+import WihdrawAmin from './screens/WihdrawAmin';
 
 
 
@@ -84,8 +88,9 @@ class App extends React.Component {
                 <Route path="/joinAsProWorker-videos" exact component={ProVideo}></Route>
                 <Route path="/payment/:job/:user/:type" exact component={ProPayment}></Route>
                 <Route path="/explore-pro/title/:title/tags/:tags/min/:min/max/:max/successRatio/:successRatio/earned/:earned/country/:country/language/:language/sort/:sort/pageNumber/:pageNumber" exact component={ExplorePro}></Route>
-                <Route path="/job-review/:job/:person" exact component={JobReviewScreen}></Route>
+                <Route path="/job-review/:job/:person/:type" exact component={JobReviewScreen}></Route>
                 <Route path="/my-jobs" exact component={MyJobsScreen}></Route>
+                <Route path="/buy-connects/:msg" exact component={BiddingBuyScreen}></Route>
 
                 
 
@@ -97,12 +102,18 @@ class App extends React.Component {
                 <Route path="/explore-teacher/title/:title/tags/:tags/min/:min/max/:max/successRatio/:successRatio/earned/:earned/country/:country/language/:language/sort/:sort/pageNumber/:pageNumber" exact component={ExploreTeach}></Route>
 
 
-                <Route path="/postAJob" exact component={PostAJobScreen}></Route>
+                <Route path="/postAJob/:type" exact component={PostAJobScreen}></Route>
                 <Route path="/job/:id" exact component={JobScreen}></Route>
                 <Route path="/job-update/:id" exact component={UpdateJobScreen}></Route>
-                <Route path="/explore-jobs" exact component={ExploreJobs}></Route>
+                <Route path="/explore-jobs/title/:title/tags/:tags" exact component={ExploreJobs}></Route>
 
 
+                <Route path="/postAJob-teacher" exact component={PostAJobScreen}></Route>
+                <Route path="/job-teacher/:id" exact component={JobScreen}></Route>
+                <Route path="/job-update-teacher/:id" exact component={UpdateJobScreen}></Route>
+                <Route path="/explore-jobs-teacher/title/:title/tags/:tags" exact component={ExploreJobTeacher}></Route>
+
+                
 
                 <Route path="/edit-gig/:id" exact component={GigUpdateScreen}></Route>
                 <Route path="/explore-gigs" exact component={ExploreGigs}></Route>
@@ -113,26 +124,78 @@ class App extends React.Component {
                 <Route path="/gig-orders" component={GigOrdersScreen}></Route>
                 <Route path="/gig-orders-placed" component={GigOrdersPlaced}></Route>
                 <Route path="/gig-order/:id" component={SingleGigOrderScreen}></Route>
+                <Route path="/payrefunds" component={RefundsScreen}></Route>
 
 
                 <Route path="/admin-updates" exact component={adminUpdate}></Route>
                 <Route path="/updates" exact component={UpdatesScreen}></Route>
                 <Route path="/dashboard" exact component={DashboardScreen}></Route>
 
+
+                <Route path="/adminconfirmwithdraw" exact component={WihdrawAmin}></Route>
                 
                  
 
                 
 
             </main>
+            <footer>
+          <section class="ft-main">
+            <div class="ft-main-item">
+              <h2 class="ft-title">About</h2>
+              <ul>
+                <li><a href="#">Services</a></li> <li><a href="#">Portfolio</a></li>  <li><a href="#">Pricing</a></li>
+                <li><a href="#">Customers</a></li> <li><a href="#">Careers</a></li>
+              </ul>
+            </div>
+            <div class="ft-main-item">
+              <h2 class="ft-title">Resources</h2>
+              <ul>
+                <li><a href="#">Docs</a></li> <li><a href="#">Blog</a></li>
+                <li><a href="#">eBooks</a></li> <li><a href="#">Webinars</a></li>
+              </ul>
+            </div>
+            <div class="ft-main-item">
+              <h2 class="ft-title">Contact</h2>
+              <ul>
+                <li><a href="#">Help</a></li> <li><a href="#">Sales</a></li> <li><a href="#">Advertise</a></li>
+              </ul>
+            </div>
+            <div class="ft-main-item">
+              
+            </div>
+          </section>
+
+  <section class="ft-social">
+    <ul class="ft-social-list">
+      <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+      <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+      <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+      <li><a href="#"><i class="fab fa-github"></i></a></li>
+      <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+      <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+  </section>
+  <section class="ft-legal">
+    <ul class="ft-legal-list">
+      <li><a href="#">Terms &amp; Conditions</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li>&copy; 2021 Copyright Zarthon Inc.</li>
+    </ul>
+  </section>
+</footer>
             {/* <footer style={{backgroundColor :' #023246' ,color:'#f6f6f6'}} className="row center">All right reserved</footer> */}
         </div>
         </BrowserRouter>
 
 
 
+// Sandbox account
+// sb-hzsjh6931270@business.example.com
+// Client ID
+// AQWIDtlMclrR7Ke4CBgssWf-NqukUdf7mQZNIZcsAuG--hDNFrVWnVvVxkkTkI8PddxYtRe08ZWf37Eo
 
-
+// EIGbXZh5crf6wYhhq5SRyXgJaPYUL2HGJjjm9yGA5bwqaUdwSmBMlrgIc2V0D4OfMkV3QF9OZlVBpcoD
 
     );
 
@@ -140,6 +203,7 @@ class App extends React.Component {
 
 
 }
+
 
 
 export default App;

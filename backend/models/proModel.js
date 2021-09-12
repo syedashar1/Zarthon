@@ -15,7 +15,7 @@ const proSchema = new mongoose.Schema(
         country : {type : String} ,
 
         earned : {type : Number , default : 0} ,
-        lastPay : {type : String} ,
+        lastPay : {type : Date} ,
 
         reviews : [{
             

@@ -9,7 +9,7 @@ import LinesEllipsis from 'react-lines-ellipsis'
 import Modal from "react-modal"
 import Zoom from "react-reveal/Zoom"
 
-export default function SingleResponse({ jobId , by , response}) {
+export default function SingleResponse({ teachJob , jobId , by , response}) {
 
 
 
@@ -25,7 +25,10 @@ export default function SingleResponse({ jobId , by , response}) {
     
         useEffect(() => {
             axios.get(`/api/users/single/${by}`).then(res=>setUser(res.data))
-            axios.get(`/api/professionals/user/${by}`).then(res => setPro(res.data) )
+
+            if(teachJob) { axios.get(`/api/teachers/user/${by}`).then(res => setPro(res.data) ) }
+            else {axios.get(`/api/professionals/user/${by}`).then(res => setPro(res.data) )  }
+            
 
         }, [])
 
@@ -38,24 +41,40 @@ export default function SingleResponse({ jobId , by , response}) {
 
 
         const hireHandle = () => {
+
+            const notificationObject = {
+                type : 'Hired' ,
+                byName : userInfo.userName ,
+                text : 'You got hired for a new Job',
+                link : `/job/${jobId}` ,
+            }
+
+            if(teachJob){
+
+                axios.put(`/api/jobsteacher/hire/${jobId}/${by}` , { }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                .then(res => { if(res.data){ 
+                    alert(`${User.name} hired !`) ;
+                    
+                    axios.put(`/api/users/notification/${by}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
+                            
+                    socket.emit('send-notification', notificationObject )
+    
+                } } )
+
+                return ;
+
+            }
+
+
             
             axios.put(`/api/jobs/hire/${jobId}/${by}` , { }, { headers: { Authorization: `Bearer ${userInfo.token}`} } )
             .then(res => { if(res.data){ 
                 alert(`${User.name} hired !`) ;
                 
-                const notificationObject = {
-                    type : 'Hired' ,
-                    byName : userInfo.userName ,
-                    text : 'You got hired for a new Job',
-                    link : `/job/${jobId}` ,
-                }
                 axios.put(`/api/users/notification/${by}`, notificationObject , { headers: { Authorization: `Bearer ${userInfo.token}`} } )
                         
                 socket.emit('send-notification', notificationObject )
-                
 
-
-            
             } } )
 
         }

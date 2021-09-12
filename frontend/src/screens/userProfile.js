@@ -89,7 +89,7 @@ export default function UserProfile(props) {
 
 
                 axios.get(`/api/gigs/user/${props.match.params.id ? props.match.params.id : userInfo._id}`)
-                .then(res => { setGigs(res.data)})
+                .then(res => { setGigs(res.data.gigs)})
                 
 
                
@@ -245,7 +245,7 @@ export default function UserProfile(props) {
 
                         </div> :
                         <div>
-                        <h1 >{ Bio || user.bio}</h1>
+                        <h2 style={{color:'grey'}}>{ Bio || user.bio}</h2>
                         { userInfo._id !== user._id && !user.active && 
                         <h1 style={{fontSize:'15px',color:'grey'}}> Last seen on {' '}{user.lastSeen.split('T')[0]}{' '}at{' '}{user.lastSeen.split('T')[1].split('.')[0]} </h1>  }
                         </div>

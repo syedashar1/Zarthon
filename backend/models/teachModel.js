@@ -14,10 +14,12 @@ const teachSchema = new mongoose.Schema(
         link : {type : String},
         country : {type : String} ,
 
-        earned : {type : Number} ,
-        lastPay : {type : String} ,
+        earned : {type : Number , default : 0} ,
+        lastPay : {type : Date} ,
 
         reviews : [{
+            
+            jobTitle : {type : String} ,
             by : {type : String},
             name : {type : String} ,
             review : {type : String } ,
@@ -36,7 +38,10 @@ const teachSchema = new mongoose.Schema(
                 title : {type : String },
                 video : {type : String},
                 description : {type : String},
-        }]
+        }] ,
+
+        jobsAt : [String]
+
 
 
 } ,
